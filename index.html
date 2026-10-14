@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Meu Laboratório — Bruna Eduarda</title>
+    <meta name="description" content="Laboratório de inovação: TI, Biologia, Música e Criações." />
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <canvas id="bg"></canvas>
+
+    <header class="topbar">
+      <div class="brand">Meu Laboratório</div>
+      <nav>
+        <a href="#projects">Criações</a>
+        <a href="#about">Sobre</a>
+        <a href="#add">Como adicionar</a>
+      </nav>
+    </header>
+
+    <main class="content">
+      <section id="hero" class="hero">
+        <h1>Bem-vinda(o) ao meu laboratório roxo</h1>
+        <p>Experimentos em biologia, tecnologia, música e arte — tudo reunido aqui.</p>
+      </section>
+
+      <section id="projects" class="projects">
+        <h2>Minhas criações</h2>
+        <div id="grid" class="grid" aria-live="polite"></div>
+      </section>
+
+      <section id="about" class="about">
+        <h2>Sobre</h2>
+        <p>Este site é um espaço para reunir projetos, demos e notas. Edite <code>projects.json</code> para adicionar novas entradas; o site carrega automaticamente os itens.</p>
+      </section>
+
+      <section id="add" class="add">
+        <h2>Como adicionar</h2>
+        <ol>
+          <li>Abra <code>projects.json</code> e adicione um objeto ao array com: <code>title</code>, <code>category</code>, <code>description</code>, <code>link</code>.</li>
+          <li>Faça commit/push no repositório — se você usa o GitHub, habilite o GitHub Pages em Settings → Pages (branch: main / root).</li>
+        </ol>
+      </section>
+
+      <footer>
+        <p>Bruna Eduarda — Laboratório pessoal • <a href="https://github.com/brued25/meulaboratorio">repositório</a></p>
+      </footer>
+    </main>
+
+    <script src="https://unpkg.com/three@0.159.0/build/three.min.js"></script>
+    <script src="/script.js"></script>
+  </body>
+</html>
