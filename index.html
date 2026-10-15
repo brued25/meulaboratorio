@@ -1,95 +1,444 @@
 <!doctype html>
-<html lang="pt-br">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Meu Laboratório — Bruna Eduarda</title>
-    <meta name="description" content="Laboratório de inovação: TI, Biologia, Música e Criações." />
-    <link rel="stylesheet" href="/styles.css">
-  </head>
-  <body>
-    <canvas id="bg"></canvas>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MY Lab — Por Bruna Eduarda</title>
+  <meta name="description" content="MY Lab — espaço envolvente de Bruna Eduarda com biologia, música e criação em uma paleta roxa estilo galáxia." />
+  <style>
+    :root{
+      --bg1:#130a2d;
+      --bg2:#2b0a4a;
+      --bg3:#4d1d7d;
+      --accent:#b57cff;
+      --accent-strong:#7b34d9;
+      --accent-soft:#d7b3ff;
+      --text:#f6eeff;
+      --muted:#d9c7ff;
+      --glass:rgba(255,255,255,0.06);
+      --card:rgba(255,255,255,0.04);
+      --shadow:rgba(72,13,118,0.55);
+    }
 
-    <header class="topbar">
-      <div class="brand">Meu Laboratório</div>
-      <nav>
-        <a href="#projects">Criações</a>
-        <a href="#about">Sobre</a>
-        <a href="#add">Adicionar</a>
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter,Segoe UI,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 15% 15%, rgba(214,179,255,0.18), transparent 18%),
+        radial-gradient(circle at 80% 30%, rgba(123,52,217,0.26), transparent 20%),
+        radial-gradient(circle at 50% 70%, rgba(181,124,255,0.12), transparent 22%),
+        linear-gradient(180deg, var(--bg1), var(--bg2) 38%, var(--bg3));
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image:
+        radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1.5px 1.5px at 60% 20%, rgba(255,255,255,0.85), transparent),
+        radial-gradient(1.5px 1.5px at 70% 80%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(2px 2px at 85% 40%, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1.7px 1.7px at 40% 70%, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1.8px 1.8px at 10% 80%, rgba(255,255,255,0.7), transparent);
+      background-repeat:repeat;
+      opacity:0.9;
+      pointer-events:none;
+      z-index:0;
+    }
+
+    .nebula{
+      position:absolute;
+      width:560px;
+      height:560px;
+      filter:blur(80px);
+      opacity:0.62;
+      pointer-events:none;
+      border-radius:50%;
+      z-index:0;
+    }
+
+    .nebula.one{background:rgba(157,95,255,0.42); top:-120px; left:-110px;}
+    .nebula.two{background:rgba(173,104,255,0.35); right:-90px; top:160px;}
+    .nebula.three{background:rgba(114,54,169,0.4); left:28%; bottom:-110px;}
+
+    .container{max-width:1180px; margin:0 auto; position:relative; z-index:1; padding:0 24px 64px;}
+
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:28px 0 18px;
+      gap:20px;
+      position:sticky;
+      top:0;
+      backdrop-filter:blur(10px);
+      background:rgba(17,7,31,0.18);
+      z-index:20;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      font-weight:700;
+      letter-spacing:0.03em;
+    }
+
+    .brand-mark{
+      width:52px;
+      height:52px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg, var(--accent), var(--accent-strong));
+      box-shadow:0 12px 28px rgba(123,52,217,0.45);
+      border:1px solid rgba(255,255,255,0.18);
+    }
+
+    .brand-mark::before{
+      content:"M";
+      font-size:1.5rem;
+      font-weight:800;
+      color:white;
+    }
+
+    .brand-text small{
+      display:block;
+      font-size:0.68rem;
+      letter-spacing:0.12em;
+      text-transform:uppercase;
+      color:var(--muted);
+      margin-bottom:2px;
+    }
+
+    .brand-text strong{
+      font-size:1.1rem;
+      letter-spacing:0.04em;
+    }
+
+    nav{
+      display:flex;
+      gap:18px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    nav a{
+      color:var(--muted);
+      text-decoration:none;
+      font-weight:600;
+      transition:color 0.2s ease;
+    }
+
+    nav a:hover{color:var(--text)}
+
+    .hero{
+      display:grid;
+      grid-template-columns:1.2fr 0.8fr;
+      align-items:center;
+      gap:34px;
+      min-height:560px;
+      padding-top:28px;
+    }
+
+    .hero-copy{
+      background:rgba(255,255,255,0.03);
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:28px;
+      padding:42px 34px;
+      box-shadow:0 26px 60px rgba(35,9,66,0.35);
+    }
+
+    .eyebrow{
+      display:inline-block;
+      background:rgba(181,124,255,0.14);
+      color:var(--accent-soft);
+      border:1px solid rgba(181,124,255,0.25);
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:0.8rem;
+      letter-spacing:0.08em;
+      text-transform:uppercase;
+      margin-bottom:18px;
+    }
+
+    h1{
+      margin:0;
+      font-size:clamp(2.7rem,5vw,6rem);
+      line-height:0.95;
+      letter-spacing:-0.06em;
+    }
+
+    .highlight{
+      background:linear-gradient(90deg, #f7eaff, #d6b8ff 40%, #a87bff);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      display:inline-block;
+    }
+
+    .sub{
+      margin-top:18px;
+      font-size:1.05rem;
+      line-height:1.75;
+      color:var(--muted);
+      max-width:640px;
+    }
+
+    .action-row{
+      margin-top:28px;
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:14px 22px;
+      border-radius:14px;
+      text-decoration:none;
+      font-weight:700;
+      transition:transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn:hover{ transform:translateY(-2px); }
+
+    .btn.primary{
+      background:linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color:white;
+      box-shadow:0 18px 32px rgba(123,52,217,0.38);
+    }
+
+    .btn.secondary{
+      background:rgba(255,255,255,0.04);
+      color:var(--text);
+      border:1px solid rgba(255,255,255,0.1);
+    }
+
+    .hero-panel{
+      background:linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:28px;
+      padding:28px;
+      box-shadow:0 22px 50px rgba(22,8,41,0.35);
+    }
+
+    .hero-panel h3{
+      margin:0 0 18px;
+      font-size:1.1rem;
+      letter-spacing:0.04em;
+    }
+
+    .mini-card{
+      border-radius:18px;
+      padding:16px 18px;
+      background:rgba(255,255,255,0.03);
+      border:1px solid rgba(255,255,255,0.06);
+      margin-bottom:14px;
+    }
+
+    .mini-card strong{display:block; margin-bottom:8px; font-size:0.96rem;}
+    .mini-card span{color:var(--muted); font-size:0.96rem; line-height:1.6;}
+
+    .section-title{
+      text-align:center;
+      margin:70px 0 26px;
+      font-size:clamp(2rem,4vw,3rem);
+      letter-spacing:-0.05em;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+      gap:20px;
+    }
+
+    .card{
+      position:relative;
+      background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:24px;
+      padding:22px;
+      overflow:hidden;
+      box-shadow:0 18px 35px rgba(18,8,31,0.2);
+    }
+
+    .card::before{
+      content:"";
+      position:absolute;
+      top:0; left:0; right:0;
+      height:4px;
+      background:linear-gradient(90deg, var(--accent), transparent 80%);
+    }
+
+    .card h3{
+      margin:0 0 10px;
+      font-size:1.45rem;
+      letter-spacing:-0.03em;
+    }
+
+    .card p{
+      margin:0 0 18px;
+      color:var(--muted);
+      line-height:1.7;
+      font-size:0.98rem;
+    }
+
+    .card a{
+      text-decoration:none;
+      color:var(--accent-soft);
+      font-weight:700;
+    }
+
+    footer{
+      text-align:center;
+      color:var(--muted);
+      padding:42px 0 30px;
+      font-size:0.95rem;
+    }
+
+    @media (max-width: 900px){
+      .hero{grid-template-columns:1fr; min-height:auto; padding-top:22px;}
+      .grid{grid-template-columns:1fr 1fr;}
+    }
+
+    @media (max-width: 640px){
+      header{padding-top:22px; flex-direction:column; align-items:flex-start;}
+      nav{justify-content:flex-start;}
+      .grid{grid-template-columns:1fr;}
+      .container{padding:0 18px 40px;}
+      .hero-copy{padding:30px 22px;}
+      .hero-panel{padding:22px;}
+    }
+  </style>
+</head>
+<body>
+  <div class="nebula one"></div>
+  <div class="nebula two"></div>
+  <div class="nebula three"></div>
+
+  <div class="container">
+    <header>
+      <div class="brand" aria-label="MY Lab por Bruna Eduarda">
+        <div class="brand-mark" aria-hidden="true"></div>
+        <div class="brand-text">
+          <small>Por</small>
+          <strong>Bruna Eduarda</strong>
+        </div>
+      </div>
+
+      <nav aria-label="Navegação principal">
+        <a href="#biologia">Biologia</a>
+        <a href="#musica">Música</a>
+        <a href="#mais">Mais</a>
       </nav>
     </header>
 
-    <main class="content">
-      <section id="hero" class="hero">
-        <h1>Meu laboratório galáctico — criações em roxo</h1>
-        <p>Um espaço que reúne experiências em biologia, tecnologia, música e arte — visualizado como um laboratório flutuando numa galáxia roxa.</p>
-      </section>
-
-      <section id="projects" class="projects">
-        <div class="projects-header">
-          <h2>Minhas criações</h2>
-          <div class="filters" role="toolbar" aria-label="Filtrar projetos">
-            <button data-cat="all" class="btn active">Todas</button>
-            <button data-cat="Biologia" class="btn">Biologia</button>
-            <button data-cat="TI" class="btn">TI</button>
-            <button data-cat="Música" class="btn">Música</button>
-            <button data-cat="Arte" class="btn">Arte</button>
-          </div>
-        </div>
-        <div id="grid" class="grid" aria-live="polite"></div>
-      </section>
-
-      <section id="about" class="about">
-        <h2>Sobre</h2>
-        <p>Este site é um espaço para reunir projetos, demos e notas. Edite <code>projects.json</code> no repositório para adicionar novas entradas; o site carrega automaticamente os itens. Para testes rápidos, use o formulário de adicionar para criar entradas temporárias no navegador.</p>
-      </section>
-
-      <section id="add" class="add">
-        <h2>Adicionar (salva apenas no seu navegador)</h2>
-        <form id="addForm">
-          <label>Title<input name="title" required></label>
-          <label>Category
-            <select name="category">
-              <option>Geral</option>
-              <option>Biologia</option>
-              <option>TI</option>
-              <option>Música</option>
-              <option>Arte</option>
-            </select>
-          </label>
-          <label>Description<textarea name="description"></textarea></label>
-          <label>Link (opcional)<input name="link"></label>
-          <div class="form-actions">
-            <button type="submit" class="btn primary">Adicionar localmente</button>
-            <button id="clearLocal" type="button" class="btn">Limpar locais</button>
-          </div>
-        </form>
-        <p class="hint">Dica: para adicionar permanentemente, edite <code>projects.json</code> no repositório e faça commit.</p>
-      </section>
-
-      <footer>
-        <p>Bruna Eduarda — Laboratório pessoal • <a href="https://github.com/brued25/meulaboratorio">repositório</a></p>
-      </footer>
-    </main>
-
-    <!-- modal de projeto -->
-    <div id="modal" class="modal" aria-hidden="true">
-      <div class="modal-content" role="dialog" aria-modal="true">
-        <button id="modalClose" class="modal-close" aria-label="Fechar">✕</button>
-        <div class="modal-body">
-          <div class="modal-media" id="modalMedia"></div>
-          <h3 id="modalTitle"></h3>
-          <div class="meta" id="modalCategory"></div>
-          <p id="modalDesc"></p>
-          <div class="modal-actions">
-            <a id="modalLink" class="btn" target="_blank" rel="noopener">Abrir projeto</a>
-            <button id="playSound" class="btn">Tocar som (sintetizador)</button>
-          </div>
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow">Universo criativo</div>
+        <h1><span class="highlight">MY Lab</span></h1>
+        <p class="sub">
+          Um espaço onde curiosidade, ciência e arte ganham vida. Aqui vivem as minhas criações de biologia,
+          experimentos sonoros, ideias e histórias que nascem entre o laboratório e a imaginação.
+        </p>
+        <div class="action-row">
+          <a class="btn primary" href="#biologia">Explorar criações</a>
+          <a class="btn secondary" href="#musica">Ouvir a energia</a>
         </div>
       </div>
-    </div>
 
-    <script src="https://unpkg.com/three@0.159.0/build/three.min.js"></script>
-    <script src="/script.js"></script>
-  </body>
+      <aside class="hero-panel" aria-label="Destaques do laboratório">
+        <h3>Destacados</h3>
+        <div class="mini-card">
+          <strong>Biologia</strong>
+          <span>Microscopia, observação e estudos que conectam vida, textura e conhecimento.</span>
+        </div>
+        <div class="mini-card">
+          <strong>Música</strong>
+          <span>Faixas, sons e composições que traduzem emoções em ritmo e atmosfera.</span>
+        </div>
+        <div class="mini-card">
+          <strong>Mais</strong>
+          <span>Arte, reflexões e projetos em expansão no meu universo criativo.</span>
+        </div>
+      </aside>
+    </section>
+
+    <h2 class="section-title" id="biologia">Biologia</h2>
+    <section class="grid" aria-label="Seção de biologia">
+      <article class="card">
+        <h3>Microscopia</h3>
+        <p>Exploração visual de estruturas e padrões minúsculos, onde o detalhe revela uma outra dimensão da vida.</p>
+        <a href="#">Ver laboratório →</a>
+      </article>
+
+      <article class="card">
+        <h3>Estudos</h3>
+        <p>Registros de pesquisa, observações e reflexões sobre processos biológicos e ciência aplicada.</p>
+        <a href="#">Abrir estudos →</a>
+      </article>
+
+      <article class="card">
+        <h3>Criações</h3>
+        <p>Projetos inspirados na biologia, cultura científica e linguagem visual para contar histórias.</p>
+        <a href="#">Ver criações →</a>
+      </article>
+    </section>
+
+    <h2 class="section-title" id="musica">Música</h2>
+    <section class="grid" aria-label="Seção de música">
+      <article class="card">
+        <h3>Produções</h3>
+        <p>Faixas e experimentações sonoras com atmosfera, emoção e personalidade única.</p>
+        <a href="#">Ouvir produções →</a>
+      </article>
+
+      <article class="card">
+        <h3>Instrumentais</h3>
+        <p>Texturas, melodias e sons que transformam ideias em viagens sensoriais.</p>
+        <a href="#">Escutar sons →</a>
+      </article>
+
+      <article class="card">
+        <h3>Ideias</h3>
+        <p>Esboços, referências e inspirações que alimentam cada nova criação musical.</p>
+        <a href="#">Explorar ideias →</a>
+      </article>
+    </section>
+
+    <h2 class="section-title" id="mais">Mais</h2>
+    <section class="grid" aria-label="Seção de mais criações">
+      <article class="card">
+        <h3>Arte</h3>
+        <p>Visuals, colagens e elementos criativos que misturam estética, ciência e emoção.</p>
+        <a href="#">Ver arte →</a>
+      </article>
+
+      <article class="card">
+        <h3>Reflexões</h3>
+        <p>Textos, pensamentos e relatos sobre criatividade, curiosidade e o processo de aprender.</p>
+        <a href="#">Ler reflexões →</a>
+      </article>
+
+      <article class="card">
+        <h3>Projetos</h3>
+        <p>Novas ideias, colaborações e caminhos criativos em expansão dentro do MY Lab.</p>
+        <a href="#">Explorar projetos →</a>
+      </article>
+    </section>
+
+    <footer>
+      MY Lab © 2026 — por Bruna Eduarda • biologia, música e mais em um universo roxo e galáctico.
+    </footer>
+  </div>
+</body>
 </html>
