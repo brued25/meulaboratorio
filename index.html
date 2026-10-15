@@ -305,16 +305,19 @@
       font-size:0.95rem;
     }
 
-    iframe.simulator-embed{width:100%;height:860px;border:0;border-radius:12px; display:block; background:#060b14}
+    iframe.simulator-embed{width:100%;height:750px;border:0;border-radius:12px; display:block; background:#060b14}
 
     .simulator-wrapper{position:relative}
     .simulator-overlay{position:absolute;inset:0;display:block;text-indent:-9999px;cursor:pointer}
     .simulator-overlay:hover{background:rgba(0,0,0,0.04)}
 
+    .desktop-only { display: block; }
+    .mobile-only { display: none; }
+
     @media (max-width: 900px){
       .hero{grid-template-columns:1fr; min-height:auto; padding-top:22px;}
       .grid{grid-template-columns:1fr 1fr;}
-      iframe.simulator-embed{height:620px}
+      iframe.simulator-embed{height:560px}
     }
 
     @media (max-width: 640px){
@@ -324,7 +327,9 @@
       .container{padding:0 18px 40px;}
       .hero-copy{padding:30px 22px;}
       .hero-panel{padding:22px;}
-      iframe.simulator-embed{height:540px}
+      .desktop-only { display: none !important; }
+      .mobile-only { display: block !important; }
+      iframe.simulator-embed{height:620px}
     }
   </style>
 </head>
@@ -385,10 +390,19 @@
     <section class="grid" aria-label="Seção de biologia">
       <article class="card">
         <h3>Microscopia</h3>
-        <p>Simulador interativo de microscopia óptica com foco, iluminação, objetiva, óleo de imersão, coloração e diagnóstico visual em tempo real.</p>
-        <div class="simulator-wrapper">
-          <iframe class="simulator-embed" src="./biologia/microlab_ultravr.html" title="MicroLab UltraVR"></iframe>
+        <p>Simulador interativo de microscopia óptica — ajuste foco, iluminação, objetiva, óleo de imersão e coloração. Versão mobile otimizada para paisagem.</p>
+
+        <div class="simulator-wrapper desktop-only" aria-hidden="false">
+          <iframe class="simulator-embed" src="./biologia/microlab_ultravr.html" title="MicroLab UltraVR — Desktop" loading="lazy" allowfullscreen></iframe>
           <a class="simulator-overlay" href="./biologia/microlab_ultravr.html" target="_blank" aria-label="Abrir simulador em página completa">Abrir simulador</a>
+        </div>
+
+        <div class="simulator-wrapper mobile-only" aria-hidden="true">
+          <iframe class="simulator-embed" src="./biologia/online_viewer_net.html" title="MicroLab UltraVR — Mobile Landscape" loading="lazy" allowfullscreen></iframe>
+          <a class="simulator-overlay" href="./biologia/online_viewer_net.html" target="_blank" aria-label="Abrir viewer mobile em página completa">Abrir versão mobile</a>
+          <div style="margin-top:10px; display:flex; gap:8px;">
+            <a href="./biologia/online_viewer_net.html" target="_blank" class="btn primary" style="padding:8px 10px; font-size:12px;">Abrir versão mobile</a>
+          </div>
         </div>
       </article>
 
