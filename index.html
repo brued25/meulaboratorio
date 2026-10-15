@@ -307,7 +307,6 @@
 
     iframe.simulator-embed{width:100%;height:750px;border:0;border-radius:12px}
 
-    /* Wrapper and clickable overlay so clicking the embedded simulator opens it in a dedicated page */
     .simulator-wrapper{position:relative}
     .simulator-overlay{position:absolute;inset:0;display:block;text-indent:-9999px;cursor:pointer}
     .simulator-overlay:hover{background:rgba(0,0,0,0.04)}
@@ -395,8 +394,16 @@
         <p>Experimente o simulador interativo BLAST diretamente nesta página — formate FASTA, execute "Blastn" simulado e aprenda a interpretar resultados.</p>
         <div class="simulator-wrapper">
           <iframe class="simulator-embed" src="./biologia/simulador_blast_de_celulas.html" title="Simulador BLAST de Células"></iframe>
-          <!-- clickable overlay: clicking anywhere on the embedded simulator opens it in a dedicated page (new tab) -->
           <a class="simulator-overlay" href="./biologia/simulador_blast_de_celulas.html" target="_blank" aria-label="Abrir simulador em página completa">Abrir simulador</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3>BioVision Lab — Visão Computacional</h3>
+        <p>Simulação de processamento digital de micrografias: filtros, limiarização, watershed e contagem automatizada para análise microbiológica.</p>
+        <div class="simulator-wrapper">
+          <iframe class="simulator-embed" src="./biologia/simulador_visao_computacional_microbiologica.html" title="BioVision Lab — Visão Computacional"></iframe>
+          <a class="simulator-overlay" href="./biologia/simulador_visao_computacional_microbiologica.html" target="_blank" aria-label="Abrir simulador em página completa">Abrir simulador</a>
         </div>
       </article>
 
