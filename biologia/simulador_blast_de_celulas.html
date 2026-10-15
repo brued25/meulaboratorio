@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioLab BLAST Quest - Genômica Interativa</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        bio: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            900: '#14532d',
+                            dark: '#0f172a',
+                            card: '#1e293b',
+                            accent: '#06b6d4',
+                            magenta: '#e11d48'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0b0f19;
+            color: #f3f4f6;
+            font-family: 'Inter', sans-serif;
+        }
+        .dna-bg {
+            background-image: radial-gradient(rgba(6, 182, 212, 0.1) 1px, transparent 1px), radial-gradient(rgba(34, 197, 94, 0.1) 1px, #0b0f19 1px);
+            background-size: 40px 40px;
+            background-position: 0 0, 20px 20px;
+        }
+        .glow-green {
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
+        }
+        .glow-cyan {
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+        }
+        .sequence-char {
+            display: inline-block;
+            width: 20px;
+            height: 24px;
+            text-align: center;
+            font-family: 'Fira Code', monospace;
+            font-weight: 600;
+            line-height: 24px;
+            border-radius: 3px;
+            margin: 1px;
+        }
+        .nucleotide-A { background-color: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+        .nucleotide-T { background-color: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
+        .nucleotide-C { background-color: rgba(234, 179, 8, 0.2); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.4); }
+        .nucleotide-G { background-color: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.4); }
+        .match { background-color: rgba(34, 197, 94, 0.3); color: #4ade80; }
+        .mismatch { background-color: rgba(239, 68, 68, 0.4); color: #ef4444; font-weight: bold; }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    </style>
+</head>
+<body class="dna-bg min-h-screen flex flex-col justify-between">
+
+    <!-- Top Header -->
+    <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50 px-4 py-3">
+        <div class="max-w-7xl mx-mx-auto flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-gradient-to-tr from-bio-600 to-bio-accent rounded-lg text-white text-xl">
+                    <i class="fa-solid fa-dna"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight text-white flex items-center gap-2">
+                        BioLab BLAST Quest <span class="text-xs px-2 py-0.5 rounded bg-bio-600/30 text-bio-400 border border-bio-500/30">Prática 1</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">Análise Genômica: Procariotos vs. Eucariotos</p>
+                </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="flex items-center space-x-6 bg-slate-800/80 px-4 py-1.5 rounded-full border border-slate-700 text-sm">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-trophy text-yellow-500"></i>
+                    <span class="text-slate-400 text-xs">XP:</span>
+                    <span id="player-xp" class="font-bold text-yellow-400 font-mono">0</span>
+                </div>
+                <div class="h-4 w-px bg-slate-700"></div>
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-layer-group text-bio-accent"></i>
+                    <span class="text-slate-400 text-xs">Nível:</span>
+                    <span id="level-indicator" class="font-bold text-bio-accent font-mono">1/10</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Game Container -->
+    <main class="max-w-6xl mx-auto px-4 py-6 flex-grow w-full">
+        <!-- Level Progress Bar -->
+        <div class="mb-6">
+            <div class="flex justify-between items-center mb-2 text-xs text-slate-400">
+                <span id="level-title-top" class="font-semibold text-bio-400 uppercase tracking-wider">Nível 1: Formato FASTA</span>
+                <span id="progress-percent">10% Concluído</span>
+            </div>
+            <div class="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden border border-slate-700">
+                <div id="progress-bar" class="bg-gradient-to-r from-bio-600 via-bio-400 to-bio-accent h-2.5 rounded-full transition-all duration-500" style="width: 10%"></div>
+            </div>
+        </div>
+
+        <!-- Level Card Container -->
+        <div id="level-card" class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-2xl relative">
+            <!-- Dynamic Content injected by JavaScript -->
+        </div>
+
+        <!-- Feedback Modal / Box -->
+        <div id="feedback-box" class="hidden mt-6 p-4 rounded-xl border backdrop-blur transition-all duration-300">
+            <div class="flex items-start space-x-3">
+                <div id="feedback-icon" class="text-2xl mt-0.5"></div>
+                <div class="flex-1">
+                    <h4 id="feedback-title" class="font-bold text-base mb-1"></h4>
+                    <p id="feedback-msg" class="text-sm text-slate-300 leading-relaxed"></p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 bg-slate-950 px-4 py-4 text-center text-xs text-slate-500">
+        <p>Desenvolvido para o Manual Prático de Microbiologia & TI • Algoritmos BLAST (NCBI) e Análise Genômica</p>
+    </footer>
+
+    <!-- JS Logic -->
+    <script>
+        // Game State
+        const gameState = {
+            currentLevel: 1,
+            xp: 0,
+            answers: {},
+            levelsCompleted: Array(10).fill(false)
+        };
+
+        // Levels Data
+        const levels = [
+            {
+                id: 1,
+                title: "Nível 1: O Formato FASTA e Validação de DNA",
+                desc: "O formato FASTA é o padrão universal em bioinformática. Ele DEVE começar com '>' na primeira linha com a descrição, seguido da sequência nas linhas seguintes (contendo apenas A, T, C, G).",
+                task: "Corrija a sequência abaixo limpando caracteres inválidos (como números e símbolos) e formatando o cabeçalho FASTA corretamente.",
+                initialInput: "amostra_123_bacteriana\nATG123GCTTTACGTTTAGCGTTAA**CGTTTACGTTT",
+                expectedHeader: ">amostra_123_bacteriana",
+                expectedSeq: "ATGGCTTTACGTTTAGCGTTAACGTTTACGTTT",
+                type: "fasta_cleaner"
+            },
+            {
+                id: 2,
+                title: "Nível 2: Executando o Primeiro Blastn",
+                desc: "O blastn (Nucleotide BLAST) compara uma sequência de DNA contra um banco de dados gigante para encontrar organismos similares.",
+                task: "Insira a sequência FASTA no Terminal BLAST do simulador e clique em 'Executar Blastn' para processar o alinhamento.",
+                sampleSeq: ">seq_desconhecida_01\nATGCGTTACGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+                type: "blast_terminal"
+            },
+            {
+                id: 3,
+                title: "Nível 3: Interpretação de Métricas do BLAST",
+                desc: "Duas estatísticas vitais do BLAST:\n1. E-value (Expect Value): Quanto MAIS PRÓXIMO DE ZERO, menor a chance da correspondência ser por acaso (E = 0.0 é perfeito!).\n2. Max Identity: Porcentagem de nucleotídeos idênticos.",
+                task: "Qual dos três alinhamentos do BLAST abaixo representa o resultado com MAIOR confiabilidade biológica para diagnóstico?",
+                options: [
+                    { id: 'A', text: "Organismo A: E-value = 2.5, Identity = 65%, Query Cover = 40%", correct: false, reason: "E-value alto (>0.05) indica alta probabilidade de alinhamento aleatório." },
+                    { id: 'B', text: "Organismo B: E-value = 1e-115, Identity = 99.8%, Query Cover = 100%", correct: true, reason: "Perfeito! E-value praticamente zero (1e-115) e Identidade de 99.8% confirmam uma correspondência altamente confiável." },
+                    { id: 'C', text: "Organismo C: E-value = 0.08, Identity = 88.0%, Query Cover = 70%", correct: false, reason: "E-value de 0.08 ainda é alto para identificação de espécie com precisão." }
+                ],
+                type: "quiz"
+            },
+            {
+                id: 4,
+                title: "Nível 4: Procarioto vs Eucarioto no BLAST",
+                desc: "Procariotos possuem genomas contínuos (sem introns). Eucariotos possuem íntrons e éxons, além de genomas muito maiores e complexos.",
+                task: "Analisando o resultado do BLAST abaixo, determine se o gene codificante encontrado pertence a um organismo Procarioto ou Eucarioto:",
+                infoBox: "Resultado do Gene X:\n- Alinhamento: Sequência dividida em 3 blocos descontínuos com regiões intercaladas não codificantes (Íntrons) de tamanho total de 12.500 bp.\n- Organismo anotado: Saccharomyces cerevisiae.",
+                options: [
+                    { id: 'proc', text: "Procarioto (Bactéria)", correct: false, reason: "Bactérias não possuem íntrons interrompendo seus genes funcionais dessa maneira, nem o genoma do Saccharomyces." },
+                    { id: 'euc', text: "Eucarioto (Fungo/Levedura)", correct: true, reason: "Exato! A presença de splicing/introns intercalando os exons codificantes e o organismo Saccharomyces cerevisiae indicam uma célula Eucariótica." }
+                ],
+                type: "quiz"
+            },
+            {
+                id: 5,
+                title: "Nível 5: Caça aos Plasmídeos e Marcadores",
+                desc: "Plasmídeos são pequenas moléculas circulares de DNA extracromossômico típicas de PROCARIOTOS, frequentemente contendo genes de resistência a antibióticos (ex: ampR).",
+                task: "Sua sequência BLAST alinhou 100% com o elemento 'pUC19 Plasmid Vector (gene bla / ampR)'. O que você conclui sobre a amostra?",
+                options: [
+                    { id: 'A', text: "Trata-se de DNA nuclear de uma célula vegetal eucariótica.", correct: false, reason: "Plantas possuem DNA genômico complexo nos núcleos, não o vetor pUC19." },
+                    { id: 'B', text: "Trata-se de um plasmídeo procariótico (bacteriano) associado a resistência a ampicilina.", correct: true, reason: "Excelente! Plasmídeos com genes ampicilina-resistentes são marcadores moleculares bacterianos/procarióticos." },
+                    { id: 'C', text: "Trata-se do genoma mitocondrial de um mamífero.", correct: false, reason: "Mitocôndrias têm DNA circular, mas pUC19 é um vetor bacteriano bem conhecido." }
+                ],
+                type: "quiz"
+            },
+            {
+                id: 6,
+                title: "Nível 6: Alinhamento de Sequências Pareadas",
+                desc: "O BLAST alinha base por base. As mutações (mismatches) são identificadas onde os nucleotídeos não coincidem.",
+                task: "Observe as duas sequências alinhadas abaixo e identifique o número exato de mutações (substituições de bases):",
+                seq1: "ATGCGTTACGATCGT",
+                seq2: "ATGCGTTACGCTCAT",
+                correctMismatches: 3, // posições 10(A->C), 13(G->C), 14(T->A)
+                type: "alignment_check"
+            },
+            {
+                id: 7,
+                title: "Nível 7: Diagnóstico de Patógeno Procarioto",
+                desc: "Uma amostra de sangue de paciente hospitalar foi sequenciada. Precisamos identificar o patógeno causador da infecção severa.",
+                task: "Rode o BLAST da amostra e selecione o diagnóstico correto com base nos dados obtidos:",
+                sampleSeq: ">amostra_paciente_uti\nATGAAAAAAACTGCAATTGCTATAGCAACTGCACTAGCTACATTCACAGCAGGTACTGCA",
+                blastResults: [
+                    { species: "Escherichia coli strain K12", cover: "100%", identity: "99.9%", evalue: "0.0", type: "Procarioto (Bactéria Gram-negativa)" },
+                    { species: "Homo sapiens chromosome 11", cover: "15%", identity: "72.0%", evalue: "0.8", type: "Eucarioto" }
+                ],
+                options: [
+                    { id: 'ecoli', text: "Infeção bacteriana por Escherichia coli (Procarioto)", correct: true, reason: "Correto! Identidade de 99.9% e E-value 0.0 confirmam Escherichia coli." },
+                    { id: 'humano', text: "Contaminação com DNA humano sem significado patogênico", correct: false, reason: "O DNA humano apresentou apenas 15% de cobertura e E-value alto de 0.8." }
+                ],
+                type: "pathogen_quiz"
+            },
+            {
+                id: 8,
+                title: "Nível 8: Identificação de Eucarioto Modelo",
+                desc: "Na indústria biotecnológica, a levedura *Saccharomyces cerevisiae* é amplamente utilizada na fermentação.",
+                task: "Execute o BLAST para a amostra biotecnológica e determine a organização do gene encontrado:",
+                sampleSeq: ">amostra_bioteck_yeast\nATGACTGCCAAGGCTTTACGTTAAAGCGCTATATTAGCGCGCGCTATATATCGATCGATC",
+                options: [
+                    { id: '1', text: "Saccharomyces cerevisiae (Eucarioto) - Gene de proteína ribossomal com éxons e introns intercalados.", correct: true, reason: "Correto! Levedura é um eucarioto unicelular modelo com introns no genoma." },
+                    { id: '2', text: "Streptococcus pneumoniae (Procarioto) - Operon contínuo sem introns.", correct: false, reason: "O alinhamento BLAST mapeou com 100% no cromossomo IV de S. cerevisiae." }
+                ],
+                type: "quiz"
+            },
+            {
+                id: 9,
+                title: "Nível 9: Diagnóstico em Amostra Mista (Metagenômica)",
+                desc: "Em metagenômica, sequenciamos todas as células presentes em um ambiente (ex: microbioma intestinal). A amostra contém múltiplos organismos.",
+                task: "Classifique as duas sequências recuperadas do microbioma em Procarioto ou Eucarioto com base nos resultados do BLAST:",
+                seqA: "Seq A: Alinha com Lactobacillus acidophilus (Cobertura 100%, Identidade 100%)",
+                seqB: "Seq B: Alinha com Candida albicans (Cobertura 98%, Identidade 99.5%, contém introns)",
+                options: [
+                    { id: 'opt1', text: "Seq A = Procarioto | Seq B = Eucarioto", correct: true, reason: "Perfeito! Lactobacillus é uma bactéria (procarioto) e Candida é um fungo/levedura (eucarioto)." },
+                    { id: 'opt2', text: "Seq A = Eucarioto | Seq B = Procarioto", correct: false, reason: "Incorreto. Lactobacillus é uma bactéria, não eucarioto." }
+                ],
+                type: "quiz"
+            },
+            {
+                id: 10,
+                title: "Nível 10: Desafio Mestre - Laudo Bioinformático Completo",
+                desc: "Você recebeu uma amostra desconhecida para emissão de laudo técnico final. Analise os parâmetros e tome a decisão clínica/biológica final.",
+                caseData: {
+                    sample: ">Amostra_Final_Mestre_010",
+                    blastHit: "Staphylococcus aureus strain MW2 plasmid pSA0385",
+                    identity: "100%",
+                    coverage: "100%",
+                    evalue: "0.0",
+                    geneFunction: "mecA (Confere resistência à Meticilina / MRSA)"
+                },
+                type: "master_level"
+            }
+        ];
+
+        // Render Current Level
+        function renderLevel() {
+            const level = levels[gameState.currentLevel - 1];
+            const card = document.getElementById('level-card');
+            
+            // Update Top Progress Bar
+            document.getElementById('level-indicator').innerText = `${level.id}/10`;
+            document.getElementById('level-title-top').innerText = level.title;
+            const percent = (level.id / 10) * 100;
+            document.getElementById('progress-bar').style.width = `${percent}%`;
+            document.getElementById('progress-percent').innerText = `${percent}% Concluído`;
+
+            // Reset feedback
+            hideFeedback();
+
+            let html = `
+                <div class="flex items-center space-x-3 mb-4">
+                    <span class="px-3 py-1 bg-bio-600/30 text-bio-400 border border-bio-500/40 rounded-full text-xs font-mono font-bold">Nível ${level.id}</span>
+                    <h2 class="text-xl font-bold text-white">${level.title}</h2>
+                </div>
+                <p class="text-slate-300 text-sm mb-4 leading-relaxed">${level.desc}</p>
+                <div class="bg-slate-800/60 p-4 rounded-lg border border-slate-700/60 mb-6">
+                    <h3 class="text-xs font-semibold text-bio-accent uppercase tracking-wider mb-1"><i class="fa-solid fa-crosshairs mr-1"></i> Sua Missão:</h3>
+                    <p class="text-sm font-medium text-slate-200">${level.task}</p>
+                </div>
+            `;
+
+            // Level Specific UIs
+            if (level.type === 'fasta_cleaner') {
+                html += `
+                    <div class="space-y-4">
+                        <label class="block text-xs font-mono text-slate-400">Editor de Sequência FASTA Raw:</label>
+                        <textarea id="fasta-input" class="w-full h-32 bg-slate-950 border border-slate-700 rounded-lg p-3 font-mono text-sm text-bio-400 focus:outline-none focus:border-bio-500">${level.initialInput}</textarea>
+                        <button onclick="checkLevel1()" class="px-5 py-2.5 bg-bio-600 hover:bg-bio-500 text-white font-semibold rounded-lg text-sm transition flex items-center gap-2">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Validar e Limpar FASTA
+                        </button>
+                    </div>
+                `;
+            } else if (level.type === 'blast_terminal') {
+                html += `
+                    <div class="space-y-4">
+                        <div class="bg-slate-950 border border-slate-800 rounded-lg p-4 font-mono text-xs">
+                            <div class="text-slate-500 mb-2">// Terminal BLASTn NCBI v2.13.0</div>
+                            <textarea id="blast-seq" readonly class="w-full bg-transparent text-bio-accent focus:outline-none resize-none h-20">${level.sampleSeq}</textarea>
+                        </div>
+                        <button onclick="runBlastTerminal()" class="px-5 py-2.5 bg-gradient-to-r from-bio-600 to-bio-accent hover:opacity-90 text-white font-semibold rounded-lg text-sm transition flex items-center gap-2">
+                            <i class="fa-solid fa-play"></i> Executar Blastn (NCBI Search)
+                        </button>
+                        <div id="blast-output" class="hidden mt-4 bg-slate-950 border border-bio-500/40 rounded-lg p-4 font-mono text-xs text-slate-300">
+                            <!-- Output injected dynamically -->
+                        </div>
+                    </div>
+                `;
+            } else if (level.type === 'quiz' || level.type === 'pathogen_quiz') {
+                if (level.infoBox) {
+                    html += `<div class="mb-4 bg-slate-950 p-3 rounded border border-slate-800 font-mono text-xs text-bio-accent whitespace-pre-line">${level.infoBox}</div>`;
+                }
+                if (level.blastResults) {
+                    html += `<div class="mb-4 overflow-x-auto"><table class="w-full text-xs font-mono text-left text-slate-300 bg-slate-950 border border-slate-800 rounded">
+                        <thead class="bg-slate-800 text-bio-400">
+                            <tr><th class="p-2">Organismo Hit</th><th class="p-2">Coverage</th><th class="p-2">Identity</th><th class="p-2">E-value</th></tr>
+                        </thead>
+                        <tbody>
+                            ${level.blastResults.map(r => `<tr class="border-t border-slate-800"><td class="p-2">${r.species}</td><td class="p-2">${r.cover}</td><td class="p-2">${r.identity}</td><td class="p-2">${r.evalue}</td></tr>`).join('')}
+                        </tbody>
+                    </table></div>`;
+                }
+                html += `<div class="space-y-3">`;
+                level.options.forEach(opt => {
+                    html += `
+                        <button onclick="checkQuizAnswer('${opt.id}')" class="w-full text-left p-4 bg-slate-800/80 hover:bg-slate-800 border border-slate-700 hover:border-bio-500/50 rounded-lg transition text-sm flex items-start space-x-3">
+                            <span class="font-bold text-bio-accent font-mono">${opt.id})</span>
+                            <span class="text-slate-200">${opt.text}</span>
+                        </button>
+                    `;
+                });
+                html += `</div>`;
+            } else if (level.type === 'alignment_check') {
+                html += `
+                    <div class="space-y-4">
+                        <div class="bg-slate-950 p-4 rounded-lg border border-slate-800 font-mono text-sm overflow-x-auto">
+                            <div class="mb-2 text-xs text-slate-500">Query (Sua Amostra):</div>
+                            <div class="mb-3 flex">
+                                ${level.seq1.split('').map(c => `<span class="sequence-char nucleotide-${c}">${c}</span>`).join('')}
+                            </div>
+                            <div class="mb-2 text-xs text-slate-500">Sbjct (Banco NCBI):</div>
+                            <div class="flex">
+                                ${level.seq2.split('').map((c, idx) => {
+                                    const match = c === level.seq1[idx];
+                                    return `<span class="sequence-char nucleotide-${c} ${match ? '' : 'mismatch'}">${c}</span>`;
+                                }).join('')}
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <label class="text-sm text-slate-300">Quantas mutações (mismatches) existem?</label>
+                            <input type="number" id="mismatch-input" class="w-20 bg-slate-950 border border-slate-700 rounded p-2 text-center font-mono text-white text-sm focus:outline-none focus:border-bio-500" placeholder="0">
+                            <button onclick="checkAlignment()" class="px-4 py-2 bg-bio-600 hover:bg-bio-500 text-white rounded font-semibold text-sm">Verificar</button>
+                        </div>
+                    </div>
+                `;
+            } else if (level.type === 'master_level') {
+                html += `
+                    <div class="bg-slate-950 border border-bio-500/30 p-4 rounded-lg font-mono text-xs text-slate-300 space-y-2 mb-6">
+                        <p class="text-bio-400 font-bold mb-2">// DADOS DO CASO CLÍNICO METAGENÔMICO</p>
+                        <p><span class="text-slate-500">Amostra:</span> ${level.caseData.sample}</p>
+                        <p><span class="text-slate-500">Melhor BLAST Hit:</span> <span class="text-yellow-400 font-bold">${level.caseData.blastHit}</span></p>
+                        <p><span class="text-slate-500">Estatísticas:</span> Identity: ${level.caseData.identity} | Cover: ${level.caseData.coverage} | E-value: ${level.caseData.evalue}</p>
+                        <p><span class="text-slate-500">Anotação Funcional do Gene:</span> <span class="text-red-400 font-bold">${level.caseData.geneFunction}</span></p>
+                    </div>
+                    <div class="space-y-3">
+                        <p class="text-sm font-semibold text-slate-200 mb-2">Com base nos dados bioinformáticos, qual é a sua conclusão e conduta técnica?</p>
+                        <button onclick="checkMaster(1)" class="w-full text-left p-3.5 bg-slate-800/80 hover:bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-200 transition">
+                            A) O agente é um eucarioto leveduriforme sensível a antifúngicos comuns.
+                        </button>
+                        <button onclick="checkMaster(2)" class="w-full text-left p-3.5 bg-slate-800/80 hover:bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-200 transition">
+                            B) Trata-se de um procarioto (Staphylococcus aureus) portador de plasmídeo de resistência à meticilina (MRSA), exigindo protocolo especial de isolamento.
+                        </button>
+                        <button onclick="checkMaster(3)" class="w-full text-left p-3.5 bg-slate-800/80 hover:bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-200 transition">
+                            C) Trata-se de uma contaminação sem importância clínica por células epiteliais humanas.
+                        </button>
+                    </div>
+                `;
+            }
+
+            card.innerHTML = html;
+        }
+
+        // Action Checkers
+        function checkLevel1() {
+            const input = document.getElementById('fasta-input').value.trim();
+            const lines = input.split('\n');
+            
+            if (lines.length < 2) {
+                showFeedback(false, "Erro de Formatação FASTA", "O formato FASTA precisa de pelo menos duas linhas: a primeira com o cabeçalho iniciado por '>' e a segunda com a sequência.");
+                return;
+            }
+
+            const header = lines[0].trim();
+            const seq = lines.slice(1).join('').replace(/[^ATCG]/gi, '').toUpperCase();
+
+            if (!header.startsWith('>')) {
+                showFeedback(false, "Cabeçalho Inválido", "O cabeçalho deve obrigatoriamente começar com o caractere '>' (Ex: >minha_sequencia).");
+                return;
+            }
+
+            if (seq !== levels[0].expectedSeq) {
+                showFeedback(false, "Sequência Contaminada", `Sua sequência ainda possui caracteres inválidos ou bases incorretas. Sequência esperada de bases limpas: ${levels[0].expectedSeq}`);
+                return;
+            }
+
+            showFeedback(true, "Excelente!", "Você formatou a sequência FASTA perfeitamente e removeu a contaminação de caracteres não pertencentes ao DNA (A, T, C, G). +100 XP!");
+            completeLevel(100);
+        }
+
+        function runBlastTerminal() {
+            const output = document.getElementById('blast-output');
+            output.classList.remove('hidden');
+            output.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-bio-accent"></i> Conectando aos servidores do NCBI e alinhando com GenBank...`;
+
+            setTimeout(() => {
+                output.innerHTML = `
+                    <div class="text-bio-400 font-bold mb-2">✓ BLAST Search Complete!</div>
+                    <div>RID: BLAST_REQ_9812739182</div>
+                    <div class="mt-2 text-slate-300">Hit Principal: <span class="text-yellow-400 font-bold">Escherichia coli str. K-12 substr. MG1655</span></div>
+                    <div>Max Score: 130 | Query Cover: 100% | E-value: 0.0 | Per. Ident: 100%</div>
+                `;
+                showFeedback(true, "Busca BLAST Concluída!", "Você executou seu primeiro alinhamento com sucesso. O algoritmo encontrou correspondência exata com o genoma bacteriano de E. coli. +100 XP!");
+                completeLevel(100);
+            }, 1200);
+        }
+
+        function checkQuizAnswer(selectedId) {
+            const level = levels[gameState.currentLevel - 1];
+            const option = level.options.find(o => o.id === selectedId);
+
+            if (option.correct) {
+                showFeedback(true, "Resposta Correta!", `${option.reason} +100 XP!`);
+                completeLevel(100);
+            } else {
+                showFeedback(false, "Incorreto!", option.reason);
+            }
+        }
+
+        function checkAlignment() {
+            const inputVal = parseInt(document.getElementById('mismatch-input').value);
+            const level = levels[5];
+
+            if (inputVal === level.correctMismatches) {
+                showFeedback(true, "Análise de Alinhamento Perfeita!", `Exatamente! Existem 3 mutações por substituição entre as sequências nas posições marcadas em vermelho. +100 XP!`);
+                completeLevel(100);
+            } else {
+                showFeedback(false, "Contagem Incorreta", "Observe atentamente as bases destacadas em vermelho onde os nucleotídeos da Query e do Subject diferem.");
+            }
+        }
+
+        function checkMaster(optionIdx) {
+            if (optionIdx === 2) {
+                showFeedback(true, "LAUDO EMITIDO COM SUCESSO!", "Excelente diagnóstico! Você utilizou a bioinformática para identificar um patógeno bacteriano crítico e detectar um plasmídeo contendo o gene mecA de resistência a antibióticos. +200 XP!");
+                completeLevel(200, true);
+            } else {
+                showFeedback(false, "Laudo Incorreto", "Revise os dados: o gene mecA em Staphylococcus aureus é um marcador clássico de resistência bacteriana (MRSA).");
+            }
+        }
+
+        function completeLevel(xpGain, isFinal = false) {
+            gameState.xp += xpGain;
+            document.getElementById('player-xp').innerText = gameState.xp;
+            
+            // Add next level button inside feedback
+            const feedbackBox = document.getElementById('feedback-box');
+            
+            let btnHtml = '';
+            if (!isFinal && gameState.currentLevel < 10) {
+                btnHtml = `
+                    <div class="mt-4 flex justify-end">
+                        <button onclick="nextLevel()" class="px-5 py-2 bg-gradient-to-r from-bio-500 to-bio-accent hover:opacity-90 text-white font-bold rounded-lg text-sm shadow-lg flex items-center gap-2">
+                            Próximo Nível <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                `;
+            } else if (isFinal) {
+                btnHtml = `
+                    <div class="mt-4 flex justify-end">
+                        <button onclick="showCertificate()" class="px-6 py-3 bg-gradient-to-r from-yellow-500 to-amber-600 hover:opacity-90 text-slate-950 font-extrabold rounded-lg text-sm shadow-xl flex items-center gap-2">
+                            <i class="fa-solid fa-award text-lg"></i> Gerar Certificado de Mestre em BLAST
+                        </button>
+                    </div>
+                `;
+            }
+
+            feedbackBox.innerHTML += btnHtml;
+        }
+
+        function nextLevel() {
+            if (gameState.currentLevel < 10) {
+                gameState.currentLevel++;
+                renderLevel();
+            }
+        }
+
+        function showFeedback(isSuccess, title, msg) {
+            const box = document.getElementById('feedback-box');
+            const icon = document.getElementById('feedback-icon');
+            const titleEl = document.getElementById('feedback-title');
+            const msgEl = document.getElementById('feedback-msg');
+
+            box.classList.remove('hidden', 'bg-red-950/80', 'border-red-500/50', 'bg-bio-900/80', 'border-bio-500/50');
+
+            if (isSuccess) {
+                box.classList.add('bg-bio-900/80', 'border-bio-500/50');
+                icon.innerHTML = `<i class="fa-solid fa-circle-check text-bio-400"></i>`;
+                titleEl.className = "font-bold text-base mb-1 text-bio-400";
+            } else {
+                box.classList.add('bg-red-950/80', 'border-red-500/50');
+                icon.innerHTML = `<i class="fa-solid fa-circle-xmark text-red-400"></i>`;
+                titleEl.className = 
