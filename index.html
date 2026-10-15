@@ -15,7 +15,7 @@
       <nav>
         <a href="#projects">Criações</a>
         <a href="#about">Sobre</a>
-        <a href="#add">Como adicionar</a>
+        <a href="#add">Adicionar</a>
       </nav>
     </header>
 
@@ -26,27 +26,68 @@
       </section>
 
       <section id="projects" class="projects">
-        <h2>Minhas criações</h2>
+        <div class="projects-header">
+          <h2>Minhas criações</h2>
+          <div class="filters" role="toolbar" aria-label="Filtrar projetos">
+            <button data-cat="all" class="btn active">Todas</button>
+            <button data-cat="Biologia" class="btn">Biologia</button>
+            <button data-cat="TI" class="btn">TI</button>
+            <button data-cat="Música" class="btn">Música</button>
+            <button data-cat="Arte" class="btn">Arte</button>
+          </div>
+        </div>
         <div id="grid" class="grid" aria-live="polite"></div>
       </section>
 
       <section id="about" class="about">
         <h2>Sobre</h2>
-        <p>Este site é um espaço para reunir projetos, demos e notas. Edite <code>projects.json</code> para adicionar novas entradas; o site carrega automaticamente os itens.</p>
+        <p>Este site é um espaço para reunir projetos, demos e notas. Edite <code>projects.json</code> no repositório para adicionar novas entradas; o site carrega automaticamente os itens. Para testes rápidos, use o formulário de adicionar para criar entradas temporárias no navegador.</p>
       </section>
 
       <section id="add" class="add">
-        <h2>Como adicionar</h2>
-        <ol>
-          <li>Abra <code>projects.json</code> e adicione um objeto ao array com: <code>title</code>, <code>category</code>, <code>description</code>, <code>link</code>.</li>
-          <li>Faça commit/push no repositório — se você usa o GitHub, habilite o GitHub Pages em Settings → Pages (branch: main / root).</li>
-        </ol>
+        <h2>Adicionar (salva apenas no seu navegador)</h2>
+        <form id="addForm">
+          <label>Title<input name="title" required></label>
+          <label>Category
+            <select name="category">
+              <option>Geral</option>
+              <option>Biologia</option>
+              <option>TI</option>
+              <option>Música</option>
+              <option>Arte</option>
+            </select>
+          </label>
+          <label>Description<textarea name="description"></textarea></label>
+          <label>Link (opcional)<input name="link"></label>
+          <div class="form-actions">
+            <button type="submit" class="btn primary">Adicionar localmente</button>
+            <button id="clearLocal" type="button" class="btn">Limpar locais</button>
+          </div>
+        </form>
+        <p class="hint">Dica: para adicionar permanentemente, edite <code>projects.json</code> no repositório e faça commit.</p>
       </section>
 
       <footer>
         <p>Bruna Eduarda — Laboratório pessoal • <a href="https://github.com/brued25/meulaboratorio">repositório</a></p>
       </footer>
     </main>
+
+    <!-- modal de projeto -->
+    <div id="modal" class="modal" aria-hidden="true">
+      <div class="modal-content" role="dialog" aria-modal="true">
+        <button id="modalClose" class="modal-close" aria-label="Fechar">✕</button>
+        <div class="modal-body">
+          <div class="modal-media" id="modalMedia"></div>
+          <h3 id="modalTitle"></h3>
+          <div class="meta" id="modalCategory"></div>
+          <p id="modalDesc"></p>
+          <div class="modal-actions">
+            <a id="modalLink" class="btn" target="_blank" rel="noopener">Abrir projeto</a>
+            <button id="playSound" class="btn">Tocar som (sintetizador)</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script src="https://unpkg.com/three@0.159.0/build/three.min.js"></script>
     <script src="/script.js"></script>

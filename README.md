@@ -2,10 +2,18 @@ Meu Laboratório
 
 Este repositório contém um site estático para apresentar projetos, experimentos e criações em biologia, tecnologia, música e outras áreas.
 
-Como funciona
+O que foi melhorado (atualização automática):
 
-- Edite projects.json para adicionar entradas. Cada item do array deve conter: title, category, description, link.
-- O site carrega projects.json dinamicamente e mostra cards no grid.
+- Filtros por categorias (Biologia, TI, Música, Arte e Todas)
+- Modal de detalhe do projeto com imagem e link
+- Formulário para adicionar projetos localmente (salva no navegador via localStorage)
+- Player de sintetizador simples (Web Audio) disponível no modal para testar sons e texturas
+- Correção do script de Three.js para usar o bundle carregado via CDN
+
+Como usar
+
+- Edite projects.json para adicionar entradas permanentemente. Cada item do array deve conter: title, category, description, link, image (opcional).
+- Você também pode usar o formulário "Adicionar" na página; ele salva temporariamente no seu navegador.
 
 Publicando no GitHub Pages
 
@@ -13,9 +21,9 @@ Publicando no GitHub Pages
 2. Escolha a branch: main e a pasta: root (/).
 3. Salve; o site ficará disponível em https://brued25.github.io/meulaboratorio (pode levar alguns minutos).
 
-Como editar/expandir
+Deseja que eu agora:
+- Adicione uma galeria de imagens por projeto (criar diretório /assets com imagens)?
+- Crie páginas individuais (projects/<slug>/index.html) para projetos que precisam de documentação?
+- Integre um player de áudio com uploads (isso exigirá back-end ou armazenamento externo)?
 
-- Para projetos mais complexos, crie uma pasta `projects/<slug>/` com um README.md ou páginas HTML e coloque o link no campo `link` do projects.json.
-- Você também pode substituir a renderização para usar Markdown ou um gerador estático (Jekyll, Eleventy) se preferir.
-
-Deseja que eu crie exemplos de páginas individuais para alguns projetos ou adicione um formulário simples para adicionar projetos sem editar JSON?
+Diga qual próximo passo prefere e eu implemento.

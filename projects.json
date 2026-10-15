@@ -1,20 +1,23 @@
 [
   {
     "title": "Visualizador de DNA - demo",
-    "category": "Biologia / Visualização",
+    "category": "Biologia",
     "description": "Uma visualização interativa simples para mostrar sequências de DNA e anotações (exemplo).",
-    "link": "#"
+    "link": "#",
+    "image": ""
   },
   {
     "title": "Mini-sintetizador",
-    "category": "Música / TI",
+    "category": "Música",
     "description": "Experimento com síntese sonora e interface web para gerar texturas sonoras.",
-    "link": "#"
+    "link": "#",
+    "image": ""
   },
   {
     "title": "Ferramenta de análise de dados",
-    "category": "TI / Pesquisa",
+    "category": "TI",
     "description": "Script e dashboards para processar dados experimentais e gerar gráficos exploratórios.",
-    "link": "#"
+    "link": "#",
+    "image": ""
   }
 ]

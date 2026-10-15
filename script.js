@@ -1,13 +1,11 @@
-// script.js - three.js background + carregador de projetos
-import * as THREE from 'three';
-
+// script.js - three.js background + carregador de projetos + filtros + modal + form localStorage
 (function(){
-  // --- 3D background ---
+  // --- 3D background using global THREE ---
   const canvas = document.getElementById('bg');
   const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
   renderer.setPixelRatio(window.devicePixelRatio);
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x18021e, 0.02);
+  scene.fog = new THREE.FogExp2(0x12021a, 0.02);
 
   const camera = new THREE.PerspectiveCamera(50, innerWidth/innerHeight, 0.1, 2000);
   camera.position.set(0,0,60);
@@ -69,37 +67,170 @@ import * as THREE from 'three';
   function animate(){
     requestAnimationFrame(animate);
     t += 0.005;
-    lab.rotation.y = Math.sin(t*0.7)*0.2;
-    orb.rotation.y += 0.01;
-    orb.position.y = 2 + Math.sin(t*1.3)*0.6;
+    lab.rotation.y = Math.sin(t*0.7)*0.18;
+    orb.rotation.y += 0.012;
+    orb.position.y = 2 + Math.sin(t*1.3)*0.58;
     renderer.render(scene,camera);
   }
   animate();
 
-  // --- carregar projetos (projects.json) e popular grid ---
-  async function loadProjects(){
+  // --- projects loader, filters, modal, form ---
+  const grid = document.getElementById('grid');
+  const filters = document.querySelectorAll('.filters .btn');
+  const modal = document.getElementById('modal');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalDesc = document.getElementById('modalDesc');
+  const modalCategory = document.getElementById('modalCategory');
+  const modalMedia = document.getElementById('modalMedia');
+  const modalLink = document.getElementById('modalLink');
+  const playSoundBtn = document.getElementById('playSound');
+
+  let projects = [];
+
+  async function fetchProjects(){
     try{
       const res = await fetch('/projects.json');
-      if(!res.ok) throw new Error('Falha ao carregar projects.json');
-      const data = await res.json();
-      const grid = document.getElementById('grid');
-      grid.innerHTML = '';
-      data.forEach(item => {
-        const card = document.createElement('article');
-        card.className = 'card';
-        const h3 = document.createElement('h3'); h3.textContent = item.title || 'Sem título';
-        const meta = document.createElement('div'); meta.className='meta'; meta.textContent = item.category || 'Geral';
-        const p = document.createElement('p'); p.textContent = item.description || '';
-        card.appendChild(h3); card.appendChild(meta); card.appendChild(p);
-        if(item.link){
-          const a = document.createElement('a'); a.href = item.link; a.target='_blank'; a.rel='noopener'; a.textContent='Ver projeto';
-          card.appendChild(a);
-        }
-        grid.appendChild(card);
-      });
-    }catch(e){
-      console.error(e);
+      if(res.ok){
+        const data = await res.json();
+        return data;
+      }
+    }catch(e){console.warn('projects.json not found or failed to load')}
+    return [];
+  }
+
+  function loadLocalProjects(){
+    try{
+      const raw = localStorage.getItem('local_projects');
+      return raw?JSON.parse(raw):[];
+    }catch(e){return []}
+  }
+
+  function saveLocalProjects(list){
+    localStorage.setItem('local_projects',JSON.stringify(list));
+  }
+
+  function renderGrid(list){
+    grid.innerHTML = '';
+    if(list.length===0){
+      grid.innerHTML = '<p style="opacity:0.9">Nenhum projeto encontrado. Adicione um no formulário ou atualize <code>projects.json</code>.</p>';
+      return;
+    }
+    list.forEach((item,idx)=>{
+      const card = document.createElement('article');
+      card.className = 'card';
+
+      const thumb = document.createElement('div'); thumb.className='thumb';
+      if(item.image){
+        const img = document.createElement('img'); img.src = item.image; img.alt = item.title || 'thumb';
+        thumb.appendChild(img);
+      }else{
+        thumb.innerHTML = '<svg width="160" height="100" viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true"><rect width="160" height="100" fill="#4b1f65"/><g fill="#d9c2ff" opacity="0.9"><circle cx="40" cy="40" r="16"/><rect x="70" y="20" width="70" height="20" rx="6"/></g></svg>';
+      }
+
+      const h3 = document.createElement('h3'); h3.textContent = item.title || 'Sem título';
+      const meta = document.createElement('div'); meta.className='meta'; meta.textContent = item.category || 'Geral';
+      const p = document.createElement('p'); p.textContent = item.description || '';
+
+      const actions = document.createElement('div'); actions.style.marginTop = '12px';
+      const viewBtn = document.createElement('button'); viewBtn.className='btn'; viewBtn.textContent='Abrir detalhes';
+      viewBtn.addEventListener('click', ()=> openModal(item));
+      actions.appendChild(viewBtn);
+      if(item.link){
+        const a = document.createElement('a'); a.href = item.link; a.target='_blank'; a.rel='noopener'; a.className='btn'; a.style.marginLeft='8px'; a.textContent='Ir para projeto';
+        actions.appendChild(a);
+      }
+
+      card.appendChild(thumb);
+      card.appendChild(h3);
+      card.appendChild(meta);
+      card.appendChild(p);
+      card.appendChild(actions);
+      grid.appendChild(card);
+    });
+  }
+
+  function applyFilter(cat){
+    const list = projects.filter(p => (cat==='all' || (p.category||'Geral')===cat));
+    renderGrid(list);
+  }
+
+  filters.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      filters.forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const cat = btn.dataset.cat;
+      applyFilter(cat);
+    });
+  });
+
+  function openModal(item){
+    modal.setAttribute('aria-hidden','false');
+    modalTitle.textContent = item.title || '';
+    modalDesc.textContent = item.description || '';
+    modalCategory.textContent = item.category || '';
+    modalLink.href = item.link || '#';
+    modalLink.style.display = item.link? 'inline-block':'none';
+    modalMedia.innerHTML = '';
+    if(item.image){
+      const img = document.createElement('img'); img.src = item.image; img.alt = item.title || '';
+      modalMedia.appendChild(img);
+    }else{
+      modalMedia.innerHTML = '<div style="padding:12px;color:#fff;opacity:0.9">Sem mídia</div>';
     }
   }
-  loadProjects();
+
+  document.getElementById('modalClose').addEventListener('click', ()=>{ modal.setAttribute('aria-hidden','true'); stopSound(); });
+  modal.addEventListener('click', (e)=>{ if(e.target===modal){ modal.setAttribute('aria-hidden','true'); stopSound(); }});
+
+  // --- simple web audio synth for modal ---
+  let audioCtx=null, osc=null, gainNode=null;
+  function startSound(){
+    if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+    if(osc) stopSound();
+    osc = audioCtx.createOscillator();
+    gainNode = audioCtx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.value = 220 + Math.random()*220;
+    gainNode.gain.value = 0.0001;
+    osc.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    osc.start();
+    // ramp up
+    gainNode.gain.exponentialRampToValueAtTime(0.06, audioCtx.currentTime + 0.2);
+  }
+  function stopSound(){
+    if(gainNode) try{ gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.2); }catch(e){}
+    if(osc){ setTimeout(()=>{ try{osc.stop(); osc.disconnect(); }catch(e){} osc=null; },300); }
+  }
+  playSoundBtn.addEventListener('click', ()=>{
+    if(!osc) startSound(); else stopSound();
+  });
+
+  // --- form handling (local storage) ---
+  const form = document.getElementById('addForm');
+  form.addEventListener('submit', (ev)=>{
+    ev.preventDefault();
+    const data = new FormData(form);
+    const item = { title: data.get('title'), category: data.get('category'), description: data.get('description'), link: data.get('link') };
+    const local = loadLocalProjects(); local.unshift(item); saveLocalProjects(local);
+    projects = mergeProjects(initialRemote, local);
+    applyFilter(document.querySelector('.filters .btn.active').dataset.cat);
+    form.reset();
+  });
+  document.getElementById('clearLocal').addEventListener('click', ()=>{ localStorage.removeItem('local_projects'); projects = mergeProjects(initialRemote,[]); applyFilter('all'); });
+
+  // merge helper
+  function mergeProjects(remote, local){
+    return [...(local||[]), ...(remote||[])];
+  }
+
+  // bootstrap
+  let initialRemote = [];
+  (async ()=>{
+    const remote = await fetchProjects();
+    const local = loadLocalProjects();
+    initialRemote = remote;
+    projects = mergeProjects(remote, local);
+    applyFilter('all');
+  })();
 })();
