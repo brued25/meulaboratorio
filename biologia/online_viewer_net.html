@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MicroLab UltraVR - Mobile Landscape Edition</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; touch-action: manipulation; }
+        /* Ocultar barra de rolagem em modo paisagem móvel */
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 h-full overflow-hidden flex flex-col">
+
+    <!-- TOPO COMPACTO MOBILE -->
+    <header class="bg-slate-900 border-b border-slate-800 px-3 py-2 flex justify-between items-center shrink-0">
+        <div class="flex items-center space-x-2">
+            <div class="bg-blue-600 p-1.5 rounded-lg">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+            </div>
+            <div>
+                <h1 class="text-xs font-bold tracking-tight text-white leading-none">MicroLab <span class="text-blue-400">UltraVR</span></h1>
+                <p class="text-[10px] text-slate-400">Mobile Landscape</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-2">
+            <button onclick="toggleTutorial()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded-md text-[11px] font-medium border border-slate-700">Guia</button>
+            <div class="bg-slate-950 border border-slate-800 px-2.5 py-1 rounded-md text-[11px]">
+                <span id="currentSlideName" class="font-semibold text-blue-400">E. coli</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- CORPO PRINCIPAL EM DUAS COLUNAS (PAISAGEM) -->
+    <main class="flex-1 w-full grid grid-cols-12 gap-2 p-2 overflow-hidden">
+
+        <!-- PAINEL ESQUERDO: CONTROLES TÁTEIS (OCUPA 5 COLUNAS) -->
+        <div class="col-span-5 bg-slate-900/90 border border-slate-800/80 rounded-xl p-2.5 flex flex-col space-y-2 overflow-y-auto">
+            
+            <!-- Amostra e Coloração -->
+            <div class="grid grid-cols-2 gap-1.5">
+                <div>
+                    <label class="text-[10px] text-slate-400 block mb-0.5">Espécime</label>
+                    <select id="slideSelect" onchange="changeSlide(this.value)" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-[11px] text-slate-200 focus:outline-none">
+                        <option value="ecoli">E. coli (Procarioto)</option>
+                        <option value="animal">Célula Animal</option>
+                        <option value="plant">Célula Vegetal</option>
+                        <option value="protozoa">Paramecium</option>
+                        <option value="fungi">Fungo / Levedura</option>
+                        <option value="tardigrade">Tardígrado</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-[10px] text-slate-400 block mb-0.5">Coloração</label>
+                    <select id="stainSelect" onchange="changeStain(this.value)" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-[11px] text-slate-200 focus:outline-none">
+                        <option value="none">In-vivo</option>
+                        <option value="gram">Gram</option>
+                        <option value="lugol">Lugol</option>
+                        <option value="methylene">Metileno</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Iluminação e Platina (Compacto) -->
+            <div class="bg-slate-950/60 p-2 rounded-lg border border-slate-800 space-y-1.5">
+                <div class="flex justify-between items-center">
+                    <span class="text-[10px] font-semibold text-slate-300">Luz & Platina X/Y</span>
+                    <button onclick="toggleLamp()" id="lampBtn" class="text-[10px] px-2 py-0.5 rounded bg-red-600/20 text-red-300 border border-red-500/40">Desligada</button>
+                </div>
+                <div class="grid grid-cols-4 gap-1 items-center">
+                    <div class="col-span-2">
+                        <span class="text-[9px] text-slate-400 block">Intensidade</span>
+                        <input type="range" min="10" max="100" value="80" oninput="updateLight(this.value)" class="w-full accent-blue-500 h-1">
+                    </div>
+                    <div class="col-span-2 grid grid-cols-3 gap-1 text-center">
+                        <button onclick="moveSlide(0, -8)" class="bg-slate-800 py-1 rounded text-[10px] border border-slate-700">▲</button>
+                        <button onclick="moveSlide(-8, 0)" class="bg-slate-800 py-1 rounded text-[10px] border border-slate-700">◀</button>
+                        <button onclick="moveSlide(8, 0)" class="bg-slate-800 py-1 rounded text-[10px] border border-slate-700">▶</button>
+                        <div></div>
+                        <button onclick="moveSlide(0, 8)" class="bg-slate-800 py-1 rounded text-[10px] border border-slate-700">▼</button>
+                        <div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Objetivas -->
+            <div class="bg-slate-950/60 p-2 rounded-lg border border-slate-800">
+                <span class="text-[10px] font-semibold text-slate-300 block mb-1">Objetivas</span>
+                <div class="grid grid-cols-4 gap-1">
+                    <button onclick="setObjective(4)" id="obj4" class="py-1 rounded text-[10px] font-bold border border-blue-500 bg-blue-600 text-white">4x</button>
+                    <button onclick="setObjective(10)" id="obj10" class="py-1 rounded text-[10px] font-bold border border-slate-700 bg-slate-800">10x</button>
+                    <button onclick="setObjective(40)" id="obj40" class="py-1 rounded text-[10px] font-bold border border-slate-700 bg-slate-800">40x</button>
+                    <button onclick="setObjective(100)" id="obj100" class="py-1 rounded text-[10px] font-bold border border-slate-700 bg-slate-800">100x</button>
+                </div>
+                <div id="oilContainer" class="hidden mt-1.5 bg-amber-950/40 border border-amber-500/30 p-1.5 rounded flex items-center justify-between">
+                    <span class="text-[9px] text-amber-300">Requer Óleo 100x</span>
+                    <button onclick="applyOil()" id="oilBtn" class="bg-amber-600 text-white px-2 py-0.5 rounded text-[9px] font-bold">Aplicar</button>
+                </div>
+            </div>
+
+            <!-- Controles de Foco -->
+            <div class="bg-slate-950/60 p-2 rounded-lg border border-slate-800 space-y-1.5">
+                <div>
+                    <div class="flex justify-between text-[10px] text-slate-400">
+                        <span>Macro (Foco Grosso)</span>
+                        <span id="coarseVal" class="text-blue-400 font-mono">50</span>
+                    </div>
+                    <input type="range" min="0" max="100" value="50" oninput="updateFocus('coarse', this.value)" class="w-full accent-blue-500 h-1">
+                </div>
+                <div>
+                    <div class="flex justify-between text-[10px] text-slate-400">
+                        <span>Micro (Nitidez)</span>
+                        <span id="fineVal" class="text-emerald-400 font-mono">50</span>
+                    </div>
+                    <input type="range" min="0" max="100" value="50" oninput="updateFocus('fine', this.value)" class="w-full accent-emerald-500 h-1">
+                </div>
+            </div>
+
+        </div>
+
+        <!-- PAINEL DIREITO: OCULAR & ORGANELAS (OCUPA 7 COLUNAS) -->
+        <div class="col-span-7 flex flex-col space-y-2 overflow-y-auto">
+            
+            <!-- Visor Circular Expandido -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 flex flex-col items-center relative shrink-0">
+                <div class="absolute top-2 left-3 flex items-center space-x-2 text-[10px] z-10 bg-slate-950/80 px-2.5 py-1 rounded border border-slate-800">
+                    <span>Aumento: <strong id="magDisplay" class="text-blue-400">4x</strong></span>
+                    <span class="text-slate-600">|</span>
+                    <span>Nitidez: <strong id="sharpnessDisplay" class="text-emerald-400">Desfocado</strong></span>
+                </div>
+
+                <!-- Lente Ocular -->
+                <div class="relative w-[420px] h-[420px] max-w-full aspect-square rounded-full bg-black border-[16px] border-slate-955 shadow-[0_0_60px_rgba(0,0,0,0.9)_inset] flex items-center ju[...]">
+                    <canvas id="microscopeCanvas" width="600" height="600" class="w-full h-full object-cover transition-all duration-150"></canvas>
+
+                    <!-- Retículo / Fios de Cabelo da Ocular -->
+                    <div class="absolute inset-0 pointer-events-none flex items-center justify-center opacity-30">
+                        <div class="w-full h-[1px] bg-emerald-400"></div>
+                        <div class="absolute h-full w-[1px] bg-emerald-400"></div>
+                        <div class="w-24 h-24 rounded-full border border-emerald-400"></div>
+                    </div>
+
+                    <!-- Mensagem de Desligado / Erro de Óleo -->
+                    <div id="canvasOverlay" class="absolute inset-0 bg-slate-950 flex flex-col items-center justify-center text-center p-6 z-20">
+                        <svg class="w-12 h-12 text-slate-600 mb-3 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+                        <p class="text-sm font-medium text-slate-300" id="overlayText">Iluminação desligada. Ligue a fonte de luz para iniciar a observação.</p>
+                    </div>
+                </div>
+
+                <!-- Dica rápida de uso -->
+                <p class="text-xs text-slate-400 mt-4 text-center">Ajuste o foco macrométrico para aproximar o plano e o micrométrico até a nitidez de 100% para revelar a anatomia organelar.</p>
+            </div>
+
+            <!-- PAINEL DE ANATOMIA ORGANELAR (EXIBE A DESCRIÇÃO QUANDO FOCADO) -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
+                <h3 class="text-sm font-semibold text-blue-400 uppercase tracking-wider mb-2 flex items-center justify-space">
+                    <span>Ficha Diagnóstica e Organelas Identificadas</span>
+                    <span id="organelleCount" class="text-xs bg-slate-800 px-2.5 py-0.5 rounded-full text-slate-300">Ajuste o foco para inspecionar</span>
+                </h3>
+                <div id="organellesInfo" class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-slate-300">
+                    <div class="bg-slate-800/60 p-3 rounded-xl border border-slate-700/60">
+                        <span class="font-bold text-white block mb-1">Amostra não visualizada</span>
+                        <p class="text-slate-400">Ligue a luz e ajuste o foco micrométrico para examinar as estruturas internas do espécime.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <h2 class="section-title" id="musica">Música</h2>
+    <section class="grid" aria-label="Seção de música">
+      <article class="card">
+        <h3>Produções</h3>
+        <p>Faixas e experimentações sonoras com atmosfera, emoção e personalidade única.</p>
+        <a href="#">Ouvir produções →</a>
+      </article>
+
+      <article class="card">
+        <h3>Instrumentais</h3>
+        <p>Texturas, melodias e sons que transformam ideias em viagens sensoriais.</p>
+        <a href="#">Escutar sons →</a>
+      </article>
+
+      <article class="card">
+        <h3>Ideias</h3>
+        <p>Esboços, referências e inspirações que alimentam cada nova criação musical.</p>
+        <a href="#">Explorar ideias →</a>
+      </article>
+    </section>
+
+    <h2 class="section-title" id="mais">Mais</h2>
+    <section class="grid" aria-label="Seção de mais criações">
+      <article class="card">
+        <h3>Arte</h3>
+        <p>Visuals, colagens e elementos criativos que misturam estética, ciência e emoção.</p>
+        <a href="#">Ver arte →</a>
+      </article>
+
+      <article class="card">
+        <h3>Reflexões</h3>
+        <p>Textos, pensamentos e relatos sobre criatividade, curiosidade e o processo de aprender.</p>
+        <a href="#">Ler reflexões →</a>
+      </article>
+
+      <article class="card">
+        <h3>Projetos</h3>
+        <p>Novas ideias, colaborações e caminhos criativos em expansão dentro do MY Lab.</p>
+        <a href="#">Explorar projetos →</a>
+      </article>
+    </section>
+
+    <footer>
+      MY Lab © 2026 — por Bruna Eduarda • biologia, música e mais em um universo roxo e galáctico.
+    </footer>
+  </div>
+</body>
+</html>
