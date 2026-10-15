@@ -1,29 +1,20 @@
-Meu Laboratório
+Meu Laboratório — Tema Galáxia Roxa
 
-Este repositório contém um site estático para apresentar projetos, experimentos e criações em biologia, tecnologia, música e outras áreas.
+Atualização: melhorei a estética e o ambiente 3D para se parecer mais com um laboratório flutuando numa galáxia roxa.
 
-O que foi melhorado (atualização automática):
+O que mudei
 
-- Filtros por categorias (Biologia, TI, Música, Arte e Todas)
-- Modal de detalhe do projeto com imagem e link
-- Formulário para adicionar projetos localmente (salva no navegador via localStorage)
-- Player de sintetizador simples (Web Audio) disponível no modal para testar sons e texturas
-- Correção do script de Three.js para usar o bundle carregado via CDN
+- Fundo 3D alterado para um starfield (pontos) + camadas de nébula geradas dinamicamente via canvas
+- Plataforma/"laboratório" estilizado com anéis e um orbe emissivo
+- Interação sutil de parallax via movimento do ponteiro
+- Ajustes de paleta e tipografia para enfatizar tons roxos/galáxia
+- Mantive funcionalidades anteriores: carregamento de projects.json, filtros, modal de detalhe, formulário local e sintetizador
 
-Como usar
+Próximos passos que recomendo
 
-- Edite projects.json para adicionar entradas permanentemente. Cada item do array deve conter: title, category, description, link, image (opcional).
-- Você também pode usar o formulário "Adicionar" na página; ele salva temporariamente no seu navegador.
+- Galeria de imagens por projeto (/assets)
+- Páginas individuais por projeto
+- Otimização de performance (reduzir número de partículas em dispositivos móveis)
+- Adicionar áudio ambiente leve (sugestão: embutir um loop curto em baixa taxa; considere hospedar externamente)
 
-Publicando no GitHub Pages
-
-1. Vá em Settings → Pages no repositório.
-2. Escolha a branch: main e a pasta: root (/).
-3. Salve; o site ficará disponível em https://brued25.github.io/meulaboratorio (pode levar alguns minutos).
-
-Deseja que eu agora:
-- Adicione uma galeria de imagens por projeto (criar diretório /assets com imagens)?
-- Crie páginas individuais (projects/<slug>/index.html) para projetos que precisam de documentação?
-- Integre um player de áudio com uploads (isso exigirá back-end ou armazenamento externo)?
-
-Diga qual próximo passo prefere e eu implemento.
+Se quiser que eu implemente: galeria de imagens (1), páginas individuais por projeto (2), player de áudio com playlist (3) ou qualquer outro item — diga qual número e eu implemento.
