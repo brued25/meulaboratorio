@@ -305,9 +305,12 @@
       font-size:0.95rem;
     }
 
+    iframe.simulator-embed{width:100%;height:750px;border:0;border-radius:12px}
+
     @media (max-width: 900px){
       .hero{grid-template-columns:1fr; min-height:auto; padding-top:22px;}
       .grid{grid-template-columns:1fr 1fr;}
+      iframe.simulator-embed{height:560px}
     }
 
     @media (max-width: 640px){
@@ -317,6 +320,7 @@
       .container{padding:0 18px 40px;}
       .hero-copy{padding:30px 22px;}
       .hero-panel{padding:22px;}
+      iframe.simulator-embed{height:480px}
     }
   </style>
 </head>
@@ -379,6 +383,12 @@
         <h3>Microscopia</h3>
         <p>Exploração visual de estruturas e padrões minúsculos, onde o detalhe revela uma outra dimensão da vida.</p>
         <a href="#">Ver laboratório →</a>
+      </article>
+
+      <article class="card">
+        <h3>Simulador BLAST de Células</h3>
+        <p>Experimente o simulador interativo BLAST diretamente nesta página — formate FASTA, execute "Blastn" simulado e aprenda a interpretar resultados.</p>
+        <iframe class="simulator-embed" src="/biologia/simulador_blast_de_celulas.html" title="Simulador BLAST de Células"></iframe>
       </article>
 
       <article class="card">
