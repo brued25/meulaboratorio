@@ -307,6 +307,11 @@
 
     iframe.simulator-embed{width:100%;height:750px;border:0;border-radius:12px}
 
+    /* Wrapper and clickable overlay so clicking the embedded simulator opens it in a dedicated page */
+    .simulator-wrapper{position:relative}
+    .simulator-overlay{position:absolute;inset:0;display:block;text-indent:-9999px;cursor:pointer}
+    .simulator-overlay:hover{background:rgba(0,0,0,0.04)}
+
     @media (max-width: 900px){
       .hero{grid-template-columns:1fr; min-height:auto; padding-top:22px;}
       .grid{grid-template-columns:1fr 1fr;}
@@ -388,7 +393,11 @@
       <article class="card">
         <h3>Simulador BLAST de Células</h3>
         <p>Experimente o simulador interativo BLAST diretamente nesta página — formate FASTA, execute "Blastn" simulado e aprenda a interpretar resultados.</p>
-        <iframe class="simulator-embed" src="./biologia/simulador_blast_de_celulas.html" title="Simulador BLAST de Células"></iframe>
+        <div class="simulator-wrapper">
+          <iframe class="simulator-embed" src="./biologia/simulador_blast_de_celulas.html" title="Simulador BLAST de Células"></iframe>
+          <!-- clickable overlay: clicking anywhere on the embedded simulator opens it in a dedicated page (new tab) -->
+          <a class="simulator-overlay" href="./biologia/simulador_blast_de_celulas.html" target="_blank" aria-label="Abrir simulador em página completa">Abrir simulador</a>
+        </div>
       </article>
 
       <article class="card">
