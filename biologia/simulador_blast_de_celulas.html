@@ -145,7 +145,7 @@
 
     <!-- Footer -->
     <footer class="border-t border-slate-800 bg-slate-950 px-4 py-4 text-center text-xs text-slate-500">
-        <p>Desenvolvido para o Manual Prático de Microbiologia & TI • Algoritmos BLAST (NCBI) e Análise Genômica</p>
+        <p>Criação e desenvolvimento por Bruna Eduarda</p>
     </footer>
 
     <!-- JS Logic -->
@@ -163,7 +163,7 @@
             {
                 id: 1,
                 title: "Nível 1: O Formato FASTA e Validação de DNA",
-                desc: "O formato FASTA é o padrão universal em bioinformática. Ele DEVE começar com '>' na primeira linha com a descrição, seguido da sequência nas linhas seguintes (contendo apenas A, T, C, G).",
+                desc: "O formato FASTA é o padrão universal em bioinformática. Ele DEVE começar com '>' na primeira linha com a descrição, seguido da sequência nas linhas seguintes (conten[...]",
                 task: "Corrija a sequência abaixo limpando caracteres inválidos (como números e símbolos) e formatando o cabeçalho FASTA corretamente.",
                 initialInput: "amostra_123_bacteriana\nATG123GCTTTACGTTTAGCGTTAA**CGTTTACGTTT",
                 expectedHeader: ">amostra_123_bacteriana",
@@ -181,12 +181,12 @@
             {
                 id: 3,
                 title: "Nível 3: Interpretação de Métricas do BLAST",
-                desc: "Duas estatísticas vitais do BLAST:\n1. E-value (Expect Value): Quanto MAIS PRÓXIMO DE ZERO, menor a chance da correspondência ser por acaso (E = 0.0 é perfeito!).\n2. Max Identity: Porcentagem de nucleotídeos idênticos.",
+                desc: "Duas estatísticas vitais do BLAST:\n1. E-value (Expect Value): Quanto MAIS PRÓXIMO DE ZERO, menor a chance da correspondência ser por acaso (E = 0.0 é perfeito!).\n2. M[...]",
                 task: "Qual dos três alinhamentos do BLAST abaixo representa o resultado com MAIOR confiabilidade biológica para diagnóstico?",
                 options: [
-                    { id: 'A', text: "Organismo A: E-value = 2.5, Identity = 65%, Query Cover = 40%", correct: false, reason: "E-value alto (>0.05) indica alta probabilidade de alinhamento aleatório." },
-                    { id: 'B', text: "Organismo B: E-value = 1e-115, Identity = 99.8%, Query Cover = 100%", correct: true, reason: "Perfeito! E-value praticamente zero (1e-115) e Identidade de 99.8% confirmam uma correspondência altamente confiável." },
-                    { id: 'C', text: "Organismo C: E-value = 0.08, Identity = 88.0%, Query Cover = 70%", correct: false, reason: "E-value de 0.08 ainda é alto para identificação de espécie com precisão." }
+                    { id: 'A', text: "Organismo A: E-value = 2.5, Identity = 65%, Query Cover = 40%", correct: false, reason: "E-value alto (>0.05) indica alta probabilidade de alinhamento aleat�[...]" },
+                    { id: 'B', text: "Organismo B: E-value = 1e-115, Identity = 99.8%, Query Cover = 100%", correct: true, reason: "Perfeito! E-value praticamente zero (1e-115) e Identidade de 99[...]" },
+                    { id: 'C', text: "Organismo C: E-value = 0.08, Identity = 88.0%, Query Cover = 70%", correct: false, reason: "E-value de 0.08 ainda é alto para identificação de espécie co[...]" },
                 ],
                 type: "quiz"
             },
@@ -195,22 +195,22 @@
                 title: "Nível 4: Procarioto vs Eucarioto no BLAST",
                 desc: "Procariotos possuem genomas contínuos (sem introns). Eucariotos possuem íntrons e éxons, além de genomas muito maiores e complexos.",
                 task: "Analisando o resultado do BLAST abaixo, determine se o gene codificante encontrado pertence a um organismo Procarioto ou Eucarioto:",
-                infoBox: "Resultado do Gene X:\n- Alinhamento: Sequência dividida em 3 blocos descontínuos com regiões intercaladas não codificantes (Íntrons) de tamanho total de 12.500 bp.\n- Organismo anotado: Saccharomyces cerevisiae.",
+                infoBox: "Resultado do Gene X:\n- Alinhamento: Sequência dividida em 3 blocos descontínuos com regiões intercaladas não codificantes (Íntrons) de tamanho total de 12.500 bp.\[...]",
                 options: [
-                    { id: 'proc', text: "Procarioto (Bactéria)", correct: false, reason: "Bactérias não possuem íntrons interrompendo seus genes funcionais dessa maneira, nem o genoma do Saccharomyces." },
-                    { id: 'euc', text: "Eucarioto (Fungo/Levedura)", correct: true, reason: "Exato! A presença de splicing/introns intercalando os exons codificantes e o organismo Saccharomyces cerevisiae indicam uma célula Eucariótica." }
+                    { id: 'proc', text: "Procarioto (Bactéria)", correct: false, reason: "Bactérias não possuem íntrons interrompendo seus genes funcionais dessa maneira, nem o genoma do Sacc[...]" },
+                    { id: 'euc', text: "Eucarioto (Fungo/Levedura)", correct: true, reason: "Exato! A presença de splicing/introns intercalando os exons codificantes e o organismo Saccharomyces [...]" },
                 ],
                 type: "quiz"
             },
             {
                 id: 5,
                 title: "Nível 5: Caça aos Plasmídeos e Marcadores",
-                desc: "Plasmídeos são pequenas moléculas circulares de DNA extracromossômico típicas de PROCARIOTOS, frequentemente contendo genes de resistência a antibióticos (ex: ampR).",
+                desc: "Plasmídeos são pequenas moléculas circulares de DNA extracromossômico típicas de PROCARIOTOS, frequentemente contendo genes de resistência a antibióticos (ex: ampR).[...]",
                 task: "Sua sequência BLAST alinhou 100% com o elemento 'pUC19 Plasmid Vector (gene bla / ampR)'. O que você conclui sobre a amostra?",
                 options: [
-                    { id: 'A', text: "Trata-se de DNA nuclear de uma célula vegetal eucariótica.", correct: false, reason: "Plantas possuem DNA genômico complexo nos núcleos, não o vetor pUC19." },
-                    { id: 'B', text: "Trata-se de um plasmídeo procariótico (bacteriano) associado a resistência a ampicilina.", correct: true, reason: "Excelente! Plasmídeos com genes ampicilina-resistentes são marcadores moleculares bacterianos/procarióticos." },
-                    { id: 'C', text: "Trata-se do genoma mitocondrial de um mamífero.", correct: false, reason: "Mitocôndrias têm DNA circular, mas pUC19 é um vetor bacteriano bem conhecido." }
+                    { id: 'A', text: "Trata-se de DNA nuclear de uma célula vegetal eucariótica.", correct: false, reason: "Plantas possuem DNA genômico complexo nos núcleos, não o vetor pUC[...]" },
+                    { id: 'B', text: "Trata-se de um plasmídeo procariótico (bacteriano) associado a resistência a ampicilina.", correct: true, reason: "Excelente! Plasmídeos com genes ampici[...]" },
+                    { id: 'C', text: "Trata-se do genoma mitocondrial de um mamífero.", correct: false, reason: "Mitocôndrias têm DNA circular, mas pUC19 é um vetor bacteriano bem conhecido.[...]" },
                 ],
                 type: "quiz"
             },
@@ -235,8 +235,8 @@
                     { species: "Homo sapiens chromosome 11", cover: "15%", identity: "72.0%", evalue: "0.8", type: "Eucarioto" }
                 ],
                 options: [
-                    { id: 'ecoli', text: "Infeção bacteriana por Escherichia coli (Procarioto)", correct: true, reason: "Correto! Identidade de 99.9% e E-value 0.0 confirmam Escherichia coli." },
-                    { id: 'humano', text: "Contaminação com DNA humano sem significado patogênico", correct: false, reason: "O DNA humano apresentou apenas 15% de cobertura e E-value alto de 0.8." }
+                    { id: 'ecoli', text: "Infeção bacteriana por Escherichia coli (Procarioto)", correct: true, reason: "Correto! Identidade de 99.9% e E-value 0.0 confirmam Escherichia coli." [...] },
+                    { id: 'humano', text: "Contaminação com DNA humano sem significado patogênico", correct: false, reason: "O DNA humano apresentou apenas 15% de cobertura e E-value alto de 0[...]" },
                 ],
                 type: "pathogen_quiz"
             },
@@ -247,8 +247,8 @@
                 task: "Execute o BLAST para a amostra biotecnológica e determine a organização do gene encontrado:",
                 sampleSeq: ">amostra_bioteck_yeast\nATGACTGCCAAGGCTTTACGTTAAAGCGCTATATTAGCGCGCGCTATATATCGATCGATC",
                 options: [
-                    { id: '1', text: "Saccharomyces cerevisiae (Eucarioto) - Gene de proteína ribossomal com éxons e introns intercalados.", correct: true, reason: "Correto! Levedura é um eucarioto unicelular modelo com introns no genoma." },
-                    { id: '2', text: "Streptococcus pneumoniae (Procarioto) - Operon contínuo sem introns.", correct: false, reason: "O alinhamento BLAST mapeou com 100% no cromossomo IV de S. cerevisiae." }
+                    { id: '1', text: "Saccharomyces cerevisiae (Eucarioto) - Gene de proteína ribossomal com éxons e introns intercalados.", correct: true, reason: "Correto! Levedura é um euca[...]" },
+                    { id: '2', text: "Streptococcus pneumoniae (Procarioto) - Operon contínuo sem introns.", correct: false, reason: "O alinhamento BLAST mapeou com 100% no cromossomo IV de S. c[...]" },
                 ],
                 type: "quiz"
             },
@@ -260,7 +260,7 @@
                 seqA: "Seq A: Alinha com Lactobacillus acidophilus (Cobertura 100%, Identidade 100%)",
                 seqB: "Seq B: Alinha com Candida albicans (Cobertura 98%, Identidade 99.5%, contém introns)",
                 options: [
-                    { id: 'opt1', text: "Seq A = Procarioto | Seq B = Eucarioto", correct: true, reason: "Perfeito! Lactobacillus é uma bactéria (procarioto) e Candida é um fungo/levedura (eucarioto)." },
+                    { id: 'opt1', text: "Seq A = Procarioto | Seq B = Eucarioto", correct: true, reason: "Perfeito! Lactobacillus é uma bactéria (procarioto) e Candida é um fungo/levedura (euc[...]" },
                     { id: 'opt2', text: "Seq A = Eucarioto | Seq B = Procarioto", correct: false, reason: "Incorreto. Lactobacillus é uma bactéria, não eucarioto." }
                 ],
                 type: "quiz"
@@ -313,7 +313,7 @@
                 html += `
                     <div class="space-y-4">
                         <label class="block text-xs font-mono text-slate-400">Editor de Sequência FASTA Raw:</label>
-                        <textarea id="fasta-input" class="w-full h-32 bg-slate-950 border border-slate-700 rounded-lg p-3 font-mono text-sm text-bio-400 focus:outline-none focus:border-bio-500">${level.initialInput}</textarea>
+                        <textarea id="fasta-input" class="w-full h-32 bg-slate-950 border border-slate-700 rounded-lg p-3 font-mono text-sm text-bio-400 focus:outline-none focus:border-bio-500">$[...]</textarea>
                         <button onclick="checkLevel1()" class="px-5 py-2.5 bg-bio-600 hover:bg-bio-500 text-white font-semibold rounded-lg text-sm transition flex items-center gap-2">
                             <i class="fa-solid fa-wand-magic-sparkles"></i> Validar e Limpar FASTA
                         </button>
@@ -326,7 +326,7 @@
                             <div class="text-slate-500 mb-2">// Terminal BLASTn NCBI v2.13.0</div>
                             <textarea id="blast-seq" readonly class="w-full bg-transparent text-bio-accent focus:outline-none resize-none h-20">${level.sampleSeq}</textarea>
                         </div>
-                        <button onclick="runBlastTerminal()" class="px-5 py-2.5 bg-gradient-to-r from-bio-600 to-bio-accent hover:opacity-90 text-white font-semibold rounded-lg text-sm transition flex items-center gap-2">
+                        <button onclick="runBlastTerminal()" class="px-5 py-2.5 bg-gradient-to-r from-bio-600 to-bio-accent hover:opacity-90 text-white font-semibold rounded-lg text-sm transition[...]
                             <i class="fa-solid fa-play"></i> Executar Blastn (NCBI Search)
                         </button>
                         <div id="blast-output" class="hidden mt-4 bg-slate-950 border border-bio-500/40 rounded-lg p-4 font-mono text-xs text-slate-300">
@@ -344,14 +344,14 @@
                             <tr><th class="p-2">Organismo Hit</th><th class="p-2">Coverage</th><th class="p-2">Identity</th><th class="p-2">E-value</th></tr>
                         </thead>
                         <tbody>
-                            ${level.blastResults.map(r => `<tr class="border-t border-slate-800"><td class="p-2">${r.species}</td><td class="p-2">${r.cover}</td><td class="p-2">${r.identity}</td><td class="p-2">${r.evalue}</td></tr>`).join('')}
+                            ${level.blastResults.map(r => `<tr class="border-t border-slate-800"><td class="p-2">${r.species}</td><td class="p-2">${r.cover}</td><td class="p-2">${r.identity}</td>[...]`).join('')}
                         </tbody>
                     </table></div>`;
                 }
                 html += `<div class="space-y-3">`;
                 level.options.forEach(opt => {
                     html += `
-                        <button onclick="checkQuizAnswer('${opt.id}')" class="w-full text-left p-4 bg-slate-800/80 hover:bg-slate-800 border border-slate-700 hover:border-bio-500/50 rounded-lg transition text-sm flex items-start space-x-3">
+                        <button onclick="checkQuizAnswer('${opt.id}')" class="w-full text-left p-4 bg-slate-800/80 hover:bg-slate-800 border border-slate-700 hover:border-bio-500/50 rounded-lg tr[...]">
                             <span class="font-bold text-bio-accent font-mono">${opt.id})</span>
                             <span class="text-slate-200">${opt.text}</span>
                         </button>
@@ -376,7 +376,7 @@
                         </div>
                         <div class="flex items-center space-x-3">
                             <label class="text-sm text-slate-300">Quantas mutações (mismatches) existem?</label>
-                            <input type="number" id="mismatch-input" class="w-20 bg-slate-950 border border-slate-700 rounded p-2 text-center font-mono text-white text-sm focus:outline-none focus:border-bio-500" placeholder="0">
+                            <input type="number" id="mismatch-input" class="w-20 bg-slate-950 border border-slate-700 rounded p-2 text-center font-mono text-white text-sm focus:outline-none focus[...]">
                             <button onclick="checkAlignment()" class="px-4 py-2 bg-bio-600 hover:bg-bio-500 text-white rounded font-semibold text-sm">Verificar</button>
                         </div>
                     </div>
@@ -427,7 +427,7 @@
             }
 
             if (seq !== levels[0].expectedSeq) {
-                showFeedback(false, "Sequência Contaminada", `Sua sequência ainda possui caracteres inválidos ou bases incorretas. Sequência esperada de bases limpas: ${levels[0].expectedSeq}`);
+                showFeedback(false, "Sequência Contaminada", `Sua sequência ainda possui caracteres inválidos ou bases incorretas. Sequência esperada de bases limpas: ${levels[0].expectedSeq}[...]");
                 return;
             }
 
@@ -447,7 +447,7 @@
                     <div class="mt-2 text-slate-300">Hit Principal: <span class="text-yellow-400 font-bold">Escherichia coli str. K-12 substr. MG1655</span></div>
                     <div>Max Score: 130 | Query Cover: 100% | E-value: 0.0 | Per. Ident: 100%</div>
                 `;
-                showFeedback(true, "Busca BLAST Concluída!", "Você executou seu primeiro alinhamento com sucesso. O algoritmo encontrou correspondência exata com o genoma bacteriano de E. coli. +100 XP!");
+                showFeedback(true, "Busca BLAST Concluída!", "Você executou seu primeiro alinhamento com sucesso. O algoritmo encontrou correspondência exata com o genoma bacteriano de E. coli[...");
                 completeLevel(100);
             }, 1200);
         }
@@ -478,7 +478,7 @@
 
         function checkMaster(optionIdx) {
             if (optionIdx === 2) {
-                showFeedback(true, "LAUDO EMITIDO COM SUCESSO!", "Excelente diagnóstico! Você utilizou a bioinformática para identificar um patógeno bacteriano crítico e detectar um plasmídeo contendo o gene mecA de resistência a antibióticos. +200 XP!");
+                showFeedback(true, "LAUDO EMITIDO COM SUCESSO!", "Excelente diagnóstico! Você utilizou a bioinformática para identificar um patógeno bacteriano crítico e detectar um plasmíd[...");
                 completeLevel(200, true);
             } else {
                 showFeedback(false, "Laudo Incorreto", "Revise os dados: o gene mecA em Staphylococcus aureus é um marcador clássico de resistência bacteriana (MRSA).");
@@ -496,7 +496,7 @@
             if (!isFinal && gameState.currentLevel < 10) {
                 btnHtml = `
                     <div class="mt-4 flex justify-end">
-                        <button onclick="nextLevel()" class="px-5 py-2 bg-gradient-to-r from-bio-500 to-bio-accent hover:opacity-90 text-white font-bold rounded-lg text-sm shadow-lg flex items-center gap-2">
+                        <button onclick="nextLevel()" class="px-5 py-2 bg-gradient-to-r from-bio-500 to-bio-accent hover:opacity-90 text-white font-bold rounded-lg text-sm shadow-lg flex items-ce[...]
                             Próximo Nível <i class="fa-solid fa-arrow-right"></i>
                         </button>
                     </div>
@@ -504,7 +504,7 @@
             } else if (isFinal) {
                 btnHtml = `
                     <div class="mt-4 flex justify-end">
-                        <button onclick="showCertificate()" class="px-6 py-3 bg-gradient-to-r from-yellow-500 to-amber-600 hover:opacity-90 text-slate-950 font-extrabold rounded-lg text-sm shadow-xl flex items-center gap-2">
+                        <button onclick="showCertificate()" class="px-6 py-3 bg-gradient-to-r from-yellow-500 to-amber-600 hover:opacity-90 text-slate-950 font-extrabold rounded-lg text-sm shadow[...]
                             <i class="fa-solid fa-award text-lg"></i> Gerar Certificado de Mestre em BLAST
                         </button>
                     </div>
