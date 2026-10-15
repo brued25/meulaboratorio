@@ -305,7 +305,7 @@
       font-size:0.95rem;
     }
 
-    iframe.simulator-embed{width:100%;height:750px;border:0;border-radius:12px}
+    iframe.simulator-embed{width:100%;height:860px;border:0;border-radius:12px; display:block; background:#060b14}
 
     .simulator-wrapper{position:relative}
     .simulator-overlay{position:absolute;inset:0;display:block;text-indent:-9999px;cursor:pointer}
@@ -314,7 +314,7 @@
     @media (max-width: 900px){
       .hero{grid-template-columns:1fr; min-height:auto; padding-top:22px;}
       .grid{grid-template-columns:1fr 1fr;}
-      iframe.simulator-embed{height:560px}
+      iframe.simulator-embed{height:620px}
     }
 
     @media (max-width: 640px){
@@ -324,7 +324,7 @@
       .container{padding:0 18px 40px;}
       .hero-copy{padding:30px 22px;}
       .hero-panel{padding:22px;}
-      iframe.simulator-embed{height:480px}
+      iframe.simulator-embed{height:540px}
     }
   </style>
 </head>
@@ -385,8 +385,11 @@
     <section class="grid" aria-label="Seção de biologia">
       <article class="card">
         <h3>Microscopia</h3>
-        <p>Exploração visual de estruturas e padrões minúsculos, onde o detalhe revela uma outra dimensão da vida.</p>
-        <a href="#">Ver laboratório →</a>
+        <p>Simulador interativo de microscopia óptica com foco, iluminação, objetiva, óleo de imersão, coloração e diagnóstico visual em tempo real.</p>
+        <div class="simulator-wrapper">
+          <iframe class="simulator-embed" src="./biologia/microlab_ultravr.html" title="MicroLab UltraVR"></iframe>
+          <a class="simulator-overlay" href="./biologia/microlab_ultravr.html" target="_blank" aria-label="Abrir simulador em página completa">Abrir simulador</a>
+        </div>
       </article>
 
       <article class="card">
